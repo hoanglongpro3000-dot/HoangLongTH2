@@ -1,0 +1,638 @@
+﻿@model HoangLongTH.Models.Cart
+@{
+    ViewBag.Title = "Giỏ hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .cart-wrap {
+        max-width: 1400px;
+        margin: 30px auto;
+        padding: 0 15px;
+    }
+
+    .cart-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px 40px;
+        border-radius: 20px 20px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0;
+    }
+
+    .cart-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .cart-count {
+        background: rgba(255,255,255,0.2);
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 1.1rem;
+    }
+
+    .cart-card {
+        background: white;
+        border-radius: 0 0 20px 20px;
+        box-shadow: 0 8px 30px rgba(0,0,0,.08);
+        overflow: hidden;
+    }
+
+    .empty-cart {
+        text-align: center;
+        padding: 80px 40px;
+    }
+
+    .empty-icon {
+        font-size: 5rem;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+
+    .empty-text {
+        font-size: 1.3rem;
+        color: #718096;
+        margin-bottom: 30px;
+    }
+
+    .btn-shop {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 14px 40px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(102,126,234,.3);
+    }
+
+        .btn-shop:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(102,126,234,.4);
+            color: white;
+        }
+
+    .cart-controls {
+        padding: 20px 30px;
+        background: #f8f9ff;
+        border-bottom: 2px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .select-all-section {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .checkbox-custom {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        accent-color: #667eea;
+    }
+
+    .select-all-label {
+        font-weight: 600;
+        color: #2d3748;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .bulk-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .btn-bulk {
+        padding: 10px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-delete-selected {
+        background: #f56565;
+        color: white;
+        box-shadow: 0 4px 12px rgba(245,101,101,.3);
+    }
+
+        .btn-delete-selected:hover {
+            background: #e53e3e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245,101,101,.4);
+        }
+
+        .btn-delete-selected:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+    .btn-buy-selected {
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        color: white;
+        box-shadow: 0 4px 12px rgba(72,187,120,.3);
+    }
+
+        .btn-buy-selected:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(72,187,120,.4);
+        }
+
+        .btn-buy-selected:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+    .cart-items {
+        padding: 0;
+    }
+
+    .cart-item {
+        display: grid;
+        grid-template-columns: 50px 100px 1fr 140px 180px 140px 100px;
+        gap: 20px;
+        align-items: center;
+        padding: 24px 30px;
+        border-bottom: 1px solid #e2e8f0;
+        transition: background 0.3s;
+    }
+
+        .cart-item:hover {
+            background: #f8f9ff;
+        }
+
+    .item-checkbox {
+        display: flex;
+        justify-content: center;
+    }
+
+    .item-image img {
+        width: 90px;
+        height: 90px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 2px solid #f1f1f1;
+    }
+
+    .item-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .item-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 4px;
+    }
+
+    .item-category {
+        font-size: 0.85rem;
+        color: #718096;
+        background: #e2e8f0;
+        padding: 4px 12px;
+        border-radius: 12px;
+        display: inline-block;
+        width: fit-content;
+    }
+
+    .item-price {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #667eea;
+    }
+
+    .item-quantity {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .qty-control {
+        display: flex;
+        align-items: center;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        overflow: hidden;
+        background: white;
+    }
+
+        .qty-control button {
+            width: 36px;
+            height: 40px;
+            border: none;
+            background: #f7fafc;
+            color: #4a5568;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+            .qty-control button:hover {
+                background: #667eea;
+                color: white;
+            }
+
+        .qty-control input {
+            width: 60px;
+            height: 40px;
+            border: none;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+    .btn-update-qty {
+        padding: 8px 16px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+    }
+
+        .btn-update-qty:hover {
+            background: #5568d3;
+        }
+
+    .item-total {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #2d3748;
+    }
+
+    .item-actions {
+        display: flex;
+        justify-content: center;
+    }
+
+    .btn-remove {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: #fee;
+        color: #f56565;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        transition: all 0.3s;
+    }
+
+        .btn-remove:hover {
+            background: #f56565;
+            color: white;
+            transform: scale(1.1);
+        }
+
+    .cart-summary {
+        padding: 30px 40px;
+        background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .summary-info {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .summary-row {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        font-size: 1.1rem;
+    }
+
+        .summary-row.total {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+            .summary-row.total .amount {
+                color: #667eea;
+            }
+
+    .summary-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .btn-clear-all {
+        padding: 14px 28px;
+        background: white;
+        color: #f56565;
+        border: 2px solid #f56565;
+        border-radius: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+        .btn-clear-all:hover {
+            background: #f56565;
+            color: white;
+        }
+
+    .btn-checkout {
+        padding: 14px 40px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(102,126,234,.3);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-checkout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(102,126,234,.4);
+            color: white;
+        }
+
+    @@media (max-width: 1024px) {
+        .cart-item {
+            grid-template-columns: 40px 80px 1fr;
+            gap: 12px;
+        }
+
+            .cart-item > div:nth-child(4),
+            .cart-item > div:nth-child(5),
+            .cart-item > div:nth-child(6),
+            .cart-item > div:nth-child(7) {
+                grid-column: 3;
+            }
+    }
+</style>
+
+<div class="cart-wrap">
+    <div class="cart-header">
+        <h1 class="cart-title">
+            <span>🛒</span>
+            <span>Giỏ hàng của bạn</span>
+            @if (Model != null && Model.CartItem != null && Model.CartItem.Any())
+            {
+                <span class="cart-count">@Model.CartItem.Count sản phẩm</span>
+            }
+        </h1>
+    </div>
+
+    <div class="cart-card">
+        @if (Model == null || Model.CartItem == null || !Model.CartItem.Any())
+        {
+            <div class="empty-cart">
+                <div class="empty-icon">🛍️</div>
+                <p class="empty-text">Giỏ hàng của bạn đang trống</p>
+                <a href="@Url.Action("Index", "Product")" class="btn-shop">
+                    <span>🔍</span>
+                    <span>Khám phá sản phẩm</span>
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="cart-controls">
+                <div class="select-all-section">
+                    <input type="checkbox" id="selectAll" class="checkbox-custom" onchange="toggleSelectAll(this)" />
+                    <label for="selectAll" class="select-all-label">Chọn tất cả</label>
+                </div>
+                <div class="bulk-actions">
+                    <button class="btn-bulk btn-delete-selected" onclick="deleteSelected()" disabled id="btnDeleteSelected">
+                        <span>🗑️</span>
+                        <span>Xóa đã chọn</span>
+                    </button>
+                    <button class="btn-bulk btn-buy-selected" onclick="buySelected()" disabled id="btnBuySelected">
+                        <span>⚡</span>
+                        <span>Mua đã chọn</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="cart-items">
+                @foreach (var item in Model.CartItem)
+                {
+                    var img = string.IsNullOrWhiteSpace(item.Product?.ProductImage)
+                                ? Url.Content("~/Content/imgs/no-image.png")
+                                : Url.Content(item.Product.ProductImage);
+                    var lineTotal = item.UnitPrice * item.Quantity;
+
+                    <div class="cart-item" data-product-id="@item.ProductID">
+                        <div class="item-checkbox">
+                            <input type="checkbox" class="checkbox-custom item-select"
+                                   data-product-id="@item.ProductID"
+                                   onchange="updateBulkButtons()" />
+                        </div>
+
+                        <div class="item-image">
+                            <img src="@img" alt="@item.Product?.ProductName" />
+                        </div>
+
+                        <div class="item-info">
+                            <div class="item-name">@item.Product?.ProductName</div>
+                            <span class="item-category">@(item.Product?.Category?.CategoryName ?? "Chưa phân loại")</span>
+                        </div>
+
+                        <div class="item-price">
+                            @item.UnitPrice.ToString("N0") đ
+                        </div>
+
+                        <div class="item-quantity">
+                            @using (Html.BeginForm("UpdateQuantity", "Cart", FormMethod.Post, new { @class = "qty-form" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("id", item.ProductID)
+                                <div class="qty-control">
+                                    <button type="button" onclick="decreaseQty(this)">−</button>
+                                    <input type="number" name="quantity" value="@item.Quantity" min="1" max="99" readonly />
+                                    <button type="button" onclick="increaseQty(this)">+</button>
+                                </div>
+                                <button type="submit" class="btn-update-qty">✓</button>
+                            }
+                        </div>
+
+                        <div class="item-total">
+                            @lineTotal.ToString("N0") đ
+                        </div>
+
+                        <div class="item-actions">
+                            <button class="btn-remove" onclick="removeItem(@item.ProductID)" title="Xóa sản phẩm">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="cart-summary">
+                <div class="summary-info">
+                    <div class="summary-row">
+                        <span>Tổng số lượng:</span>
+                        <strong>@ViewBag.TotalQuantity sản phẩm</strong>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Tổng tiền:</span>
+                        <span class="amount">@ViewBag.TotalPrice.ToString("N0") đ</span>
+                    </div>
+                </div>
+                <div class="summary-actions">
+                    <button class="btn-clear-all" onclick="clearCart()">
+                        Xóa toàn bộ
+                    </button>
+                    <a href="@Url.Action("Checkout", "Order")" class="btn-checkout">
+                        Thanh toán →
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        function increaseQty(btn) {
+            const input = btn.parentElement.querySelector('input[type="number"]');
+            const val = parseInt(input.value || '1', 10);
+            if (val < 99) input.value = val + 1;
+        }
+
+        function decreaseQty(btn) {
+            const input = btn.parentElement.querySelector('input[type="number"]');
+            const val = parseInt(input.value || '1', 10);
+            if (val > 1) input.value = val - 1;
+        }
+
+        function removeItem(productId) {
+            if (confirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?')) {
+                window.location.href = '@Url.Action("RemoveItem", "Cart")?id=' + productId;
+            }
+        }
+
+        function clearCart() {
+            if (confirm('Bạn có chắc muốn xóa toàn bộ giỏ hàng?')) {
+                window.location.href = '@Url.Action("ClearCart", "Cart")';
+            }
+        }
+
+        function toggleSelectAll(checkbox) {
+            const checkboxes = document.querySelectorAll('.item-select');
+            checkboxes.forEach(cb => cb.checked = checkbox.checked);
+            updateBulkButtons();
+        }
+
+        function updateBulkButtons() {
+            const selectedCount = document.querySelectorAll('.item-select:checked').length;
+            const btnDelete = document.getElementById('btnDeleteSelected');
+            const btnBuy = document.getElementById('btnBuySelected');
+
+            btnDelete.disabled = selectedCount === 0;
+            btnBuy.disabled = selectedCount === 0;
+
+            // Update select all checkbox
+            const totalCheckboxes = document.querySelectorAll('.item-select').length;
+            const selectAllCheckbox = document.getElementById('selectAll');
+            selectAllCheckbox.checked = selectedCount === totalCheckboxes && selectedCount > 0;
+        }
+
+        function deleteSelected() {
+            const selected = Array.from(document.querySelectorAll('.item-select:checked'))
+                .map(cb => cb.getAttribute('data-product-id'));
+
+            if (selected.length === 0) {
+                alert('Vui lòng chọn ít nhất một sản phẩm!');
+                return;
+            }
+
+            if (confirm(`Bạn có chắc muốn xóa ${selected.length} sản phẩm đã chọn?`)) {
+                // Xóa từng sản phẩm
+                selected.forEach((id, index) => {
+                    const form = document.createElement('form');
+                    form.method = 'GET';
+                    form.action = '@Url.Action("RemoveItem", "Cart")';
+
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'id';
+                    input.value = id;
+
+                    form.appendChild(input);
+                    document.body.appendChild(form);
+
+                    if (index === selected.length - 1) {
+                        form.submit();
+                    } else {
+                        fetch(form.action + '?id=' + id);
+                    }
+                });
+            }
+        }
+
+        function buySelected() {
+            const selected = Array.from(document.querySelectorAll('.item-select:checked'));
+
+            if (selected.length === 0) {
+                alert('Vui lòng chọn ít nhất một sản phẩm để mua!');
+                return;
+            }
+
+            // Chuyển sang trang checkout (tất cả sản phẩm trong giỏ sẽ được hiển thị ở đó)
+            window.location.href = '@Url.Action("Checkout", "Order")';
+        }
+
+        // Prevent manual input in quantity fields
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.qty-control input[type="number"]').forEach(input => {
+                input.addEventListener('keydown', function(e) {
+                    e.preventDefault();
+                });
+            });
+
+            // Reload cart count từ header
+            if (window.loadCartCount) {
+                window.loadCartCount();
+            }
+        });
+    </script>
+}

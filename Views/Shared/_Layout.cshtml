@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="~/Content/styles.css" rel="stylesheet" />
+    @Styles.Render("~/Content/css")             <!-- Bootstrap + Site.css -->
+    <!-- Font Awesome CDN (nếu bạn không bundle) -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          integrity="sha512-dym/Y5q..."
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="~/Content/prodetails.css" rel="stylesheet" />
+    @RenderSection("styles", required: false)   <!-- Cho phép mỗi trang thêm CSS riêng -->
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+
+    <!-- Header dùng chung -->
+    @Html.Partial("_Header")  <!-- Views/Shared/_Header.cshtml -->
+    <!-- Nội dung trang -->
+    <main class="container body-content">
+        @RenderBody()
+    </main>
+
+    <!-- Footer dùng chung -->
+    @Html.Partial("_Footer")  <!-- Views/Shared/_Footer.cshtml -->
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    <!-- Script tổng (nếu có) -->
+    @Scripts.Render("~/bundles/app")     <!-- ví dụ: bundle cho ~/Scripts/script.js -->
+    @RenderSection("scripts", required: false)  <!-- Cho phép thêm JS riêng theo trang -->
+</body>
+</html>

@@ -1,0 +1,106 @@
+﻿@model IEnumerable<HoangLongTH.Models.Category>
+
+@{
+    ViewBag.Title = "Quản lý danh mục";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .category-card {
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        padding: 25px;
+        transition: all 0.3s ease;
+    }
+
+        .category-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+    .page-header {
+        border-bottom: 3px solid #0d6efd;
+        padding-bottom: 10px;
+        margin-bottom: 25px;
+    }
+
+    .table thead {
+        background: linear-gradient(90deg, #007bff, #0d6efd);
+        color: #fff;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(13, 110, 253, 0.07);
+    }
+
+    .btn-custom {
+        border-radius: 8px;
+        transition: all 0.2s;
+        font-weight: 500;
+    }
+
+        .btn-custom:hover {
+            transform: scale(1.05);
+        }
+
+    .alert-custom {
+        background: #e9f5ff;
+        border: 1px solid #b6e0ff;
+        color: #0d6efd;
+        border-radius: 10px;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h2 class="text-primary fw-bold">
+            <i class="bi bi-tags-fill"></i> Quản lý danh mục sản phẩm
+        </h2>
+        @Html.ActionLink("➕ Thêm danh mục mới", "Create", null, new { @class = "btn btn-primary btn-lg text-white btn-custom shadow-sm" })
+    </div>
+
+    <div class="category-card">
+        @if (!Model.Any())
+        {
+            <div class="alert alert-custom text-center fw-semibold">
+                ⚠️ Chưa có danh mục nào! Hãy thêm danh mục mới để bắt đầu.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle text-center">
+                    <thead>
+                        <tr>
+                            <th style="width:60px;">#</th>
+                            <th>Tên danh mục</th>
+                            <th style="width:220px;">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int stt = 1;
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold text-primary">@stt</td>
+                                    <td class="text-start ps-4 fw-semibold">@Html.DisplayFor(modelItem => item.CategoryName)</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            @Html.ActionLink("✏️", "Edit", new { id = item.CategoryID }, new { @class = "btn btn-warning btn-sm text-white btn-custom" })
+                                            @Html.ActionLink("👁️", "Details", new { id = item.CategoryID }, new { @class = "btn btn-info btn-sm text-white btn-custom" })
+                                            @Html.ActionLink("🗑️", "Delete", new { id = item.CategoryID }, new { @class = "btn btn-danger btn-sm btn-custom", onclick = "return confirm('Bạn có chắc chắn muốn xóa danh mục này không?');" })
+                                        </div>
+                                    </td>
+                                </tr>
+                                stt++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

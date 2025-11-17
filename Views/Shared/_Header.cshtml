@@ -1,0 +1,405 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Top Bar - Màu tím đẹp */
+        .top-bar {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            padding: 8px 0;
+            font-size: 13px;
+        }
+
+            .top-bar > div {
+                max-width: 1200px;
+                margin: 0 auto;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 20px;
+            }
+
+        .left-links, .right-links {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .top-bar a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+            .top-bar a:hover {
+                opacity: 0.8;
+            }
+
+        .top-bar span {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* User Dropdown */
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .avatar-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 4px;
+            min-width: 180px;
+            margin-top: 8px;
+            z-index: 1000;
+        }
+
+        .user-dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu a {
+            color: #333;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #f0f0f0;
+            text-decoration: none;
+        }
+
+            .dropdown-menu a:last-child {
+                border-bottom: none;
+            }
+
+            .dropdown-menu a:hover {
+                background: #f5f5f5;
+            }
+
+        /* Main Header - Cam đẹp */
+        .main-header {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+            padding: 20px 0;
+        }
+
+            .main-header > div {
+                max-width: 1200px;
+                margin: 0 auto;
+                display: flex;
+                align-items: center;
+                gap: 30px;
+                padding: 0 20px;
+            }
+
+        .logo img {
+            height: 45px;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            flex: 1;
+        }
+
+        .search-form {
+            display: flex;
+            background: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            padding: 12px 16px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-form button {
+            background: #ff6b35;
+            border: none;
+            padding: 0 24px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+            .search-form button:hover {
+                background: #ff5722;
+            }
+
+        /* Cart */
+        .cart {
+            position: relative;
+        }
+
+            .cart a {
+                color: white;
+                text-decoration: none;
+                font-size: 28px;
+                position: relative;
+                display: inline-block;
+                transition: transform 0.2s;
+            }
+
+                .cart a:hover {
+                    transform: scale(1.1);
+                }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+            .cart-count.updated {
+                animation: bounce 0.5s;
+            }
+
+        @@keyframes bounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.3);
+            }
+        }
+
+        /* Navigation */
+        .nav-links {
+            background: linear-gradient(135deg, #ff8c42 0%, #ffa726 100%);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+            .nav-links > div {
+                max-width: 1200px;
+                margin: 0 auto;
+                display: flex;
+                gap: 8px;
+                padding: 0 20px;
+            }
+
+            .nav-links a {
+                color: white;
+                text-decoration: none;
+                padding: 12px 20px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: all 0.2s;
+                border-radius: 4px;
+            }
+
+                .nav-links a:hover {
+                    background: rgba(255, 255, 255, 0.2);
+                    transform: translateY(-2px);
+                }
+
+                .nav-links a span:first-child {
+                    font-size: 18px;
+                }
+    </style>
+</head>
+<body>
+
+    <header class="shopee-header">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div>
+                <div class="left-links">
+                    <a href="#">Kênh người bán</a>
+                    <span>|</span>
+                    <a href="#">Trở thành Người bán</a>
+                    <span>|</span>
+                    <a href="#">Tải ứng dụng</a>
+                    <span>|</span>
+                    <a href="#">Kết nối</a>
+                </div>
+                <div class="right-links">
+                    <a href="#">🔔 Thông báo</a>
+                    <a href="#">❓ Trợ giúp</a>
+
+                    @if (Session["Username"] == null)
+                    {
+                        <!-- CHƯA đăng nhập: hiện Đăng nhập / Đăng ký -->
+                        <a href="@Url.Action("Login", "Account")">
+                            <i class="fas fa-user"></i> Đăng nhập
+                        </a>
+                        <a href="@Url.Action("Register", "Account")">Đăng ký</a>
+                    }
+                    else
+                    {
+                        <!-- ĐÃ đăng nhập: chỉ hiện avatar / icon user -->
+                        <div class="user-dropdown">
+                            <a href="@Url.Action("Index", "Customer")" class="user-link">
+                                <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
+                                     alt="Avatar" class="avatar-icon" />
+
+                                @* Nếu muốn ẩn chữ username, bỏ dòng dưới đi *@
+                                @* <span>@Session["Username"]</span> *@
+
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </a>
+
+                            <div class="dropdown-menu">
+                                <a href="@Url.Action("Index", "Customer")">
+                                    <i class="fa-solid fa-user"></i> Trang khách hàng
+                                </a>
+                                <a href="@Url.Action("Index", "Cart")">
+                                    🛒 Giỏ hàng
+                                </a>
+                                <a href="@Url.Action("MyOrders", "Order")">
+                                    📦 Đơn hàng của tôi
+                                </a>
+                                <a href="@Url.Action("Logout", "Account")">
+                                    <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+
+
+            </div>
+        </div>
+
+        <!-- Main Header -->
+        <div class="main-header">
+            <div>
+                <div class="logo">
+                    <a href="/Home/Index">
+                        <img src="https://itviec.com/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsiZGF0YSI6OTE3NDg5LCJwdXIiOiJibG9iX2lkIn19--b3fa056d83b06e9e09f18e0ad49b01eb17d110ec/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemVfdG9fbGltaXQiOlszMDAsMzAwXX0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--e1d036817a0840c585f202e70291f5cdd058753d/cellphones-logo.png" alt="Logo" />
+                    </a>
+                </div>
+
+                <div class="search-bar">
+                    <form action="/Product/Index" method="get" class="search-form">
+                        <input class="search-input" type="text" name="SearchString" placeholder="🔍 Tìm kiếm sản phẩm..." />
+                        <button type="submit">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="cart">
+                    <a href="/Cart/Index">
+                        🛒
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="nav-links">
+            <div>
+                <a href="/Home/Index">
+                    <span>🏠</span>
+                    <span>Trang chủ</span>
+                </a>
+                <a href="/Product/Index">
+                    <span>🛍️</span>
+                    <span>Sản phẩm</span>
+                </a>
+                <a href="/Cart/Index">
+                    <span>🛒</span>
+                    <span>Giỏ hàng</span>
+                </a>
+                <a href="/Order/MyOrders">
+                    <span>📦</span>
+                    <span>Đơn hàng</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <script>
+        // Load cart count từ localStorage hoặc API
+        function loadCartCount() {
+            // Lấy từ localStorage
+            let count = localStorage.getItem('cartCount') || 0;
+            updateCartDisplay(parseInt(count));
+
+            // Hoặc fetch từ server
+            fetch('/Cart/GetCartCount')
+                .then(res => res.json())
+                .then(data => {
+                    updateCartDisplay(data.count);
+                    localStorage.setItem('cartCount', data.count);
+                })
+                .catch(err => console.log('Cart count error:', err));
+        }
+
+        function updateCartDisplay(count) {
+            const cartCountEl = document.getElementById('cartCount');
+            if (cartCountEl) {
+                cartCountEl.textContent = count;
+
+                // Add bounce animation
+                cartCountEl.classList.add('updated');
+                setTimeout(() => {
+                    cartCountEl.classList.remove('updated');
+                }, 500);
+            }
+        }
+
+        function incrementCartCount() {
+            let count = parseInt(localStorage.getItem('cartCount') || 0);
+            count++;
+            localStorage.setItem('cartCount', count);
+            updateCartDisplay(count);
+        }
+
+        // Load khi trang load
+        document.addEventListener('DOMContentLoaded', function () {
+            loadCartCount();
+
+            // Reload count mỗi 30 giây
+            setInterval(loadCartCount, 30000);
+        });
+
+        // Export function để gọi từ các trang khác
+        window.incrementCartCount = incrementCartCount;
+        window.loadCartCount = loadCartCount;
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,424 @@
+﻿@model HoangLongTH.Models.Cart
+@{
+    ViewBag.Title = "Thanh toán";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    decimal tong = 0m;
+}
+
+<style>
+    .checkout-wrap {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 0 15px;
+    }
+
+    .cart-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0,0,0,.08);
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+        .cart-card:hover {
+            box-shadow: 0 12px 40px rgba(0,0,0,.12);
+        }
+
+    .cart-head {
+        padding: 24px 28px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .cart-head h3 {
+            color: white;
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .cart-head .btn-link {
+            color: white;
+            text-decoration: none;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+
+            .cart-head .btn-link:hover {
+                opacity: 1;
+            }
+
+    .cart-body {
+        padding: 0;
+    }
+
+    .cart-item {
+        display: grid;
+        grid-template-columns: 80px 1fr 140px 140px;
+        gap: 16px;
+        align-items: center;
+        padding: 20px 28px;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background 0.3s;
+    }
+
+        .cart-item:hover {
+            background: #f8f9ff;
+        }
+
+        .cart-item:last-child {
+            border-bottom: 0;
+        }
+
+        .cart-item.header {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+            .cart-item.header:hover {
+                background: #f8f9fa;
+            }
+
+    .thumb {
+        width: 72px;
+        height: 72px;
+        border-radius: 12px;
+        object-fit: cover;
+        border: 2px solid #f1f1f1;
+        transition: transform 0.3s;
+    }
+
+    .cart-item:hover .thumb {
+        transform: scale(1.05);
+    }
+
+    .prod-name {
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 6px;
+        font-size: 1.05rem;
+    }
+
+    .prod-quantity {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        background: #e7f3ff;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        color: #0066cc;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .price {
+        font-size: 1.1rem;
+        color: #4a5568;
+    }
+
+    .total-price {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #667eea;
+    }
+
+    .summary {
+        background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
+        border-radius: 20px;
+    }
+
+    .summary-card {
+        background: white;
+        border-radius: 16px;
+        padding: 28px;
+        box-shadow: 0 4px 20px rgba(102,126,234,.1);
+    }
+
+        .summary-card h4 {
+            color: #2d3748;
+            font-weight: 700;
+            margin-bottom: 24px;
+            font-size: 1.3rem;
+        }
+
+    .form-label {
+        font-weight: 600;
+        color: #4a5568;
+        margin-bottom: 8px;
+    }
+
+    .form-control, .form-select {
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 12px 16px;
+        transition: all 0.3s;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,.1);
+        }
+
+    .form-check {
+        padding: 14px 18px;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        margin-bottom: 12px;
+        transition: all 0.3s;
+    }
+
+        .form-check:hover {
+            border-color: #cbd5e0;
+            background: #f7fafc;
+        }
+
+    .form-check-input:checked ~ .form-check-label {
+        color: #667eea;
+        font-weight: 600;
+    }
+
+    .form-check-input:checked {
+        background-color: #667eea;
+        border-color: #667eea;
+    }
+
+    .payment-icon {
+        font-size: 1.2rem;
+        margin-right: 8px;
+    }
+
+    .summary-divider {
+        height: 1px;
+        background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+        margin: 20px 0;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        color: #4a5568;
+    }
+
+        .summary-row.subtotal {
+            font-size: 1.05rem;
+        }
+
+        .summary-row.shipping {
+            font-size: 0.95rem;
+            color: #718096;
+        }
+
+            .summary-row.shipping .badge {
+                background: #48bb78;
+                color: white;
+                padding: 4px 10px;
+                border-radius: 12px;
+                font-size: 0.8rem;
+            }
+
+        .summary-row.total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2d3748;
+            padding-top: 16px;
+            border-top: 2px dashed #e2e8f0;
+        }
+
+            .summary-row.total .amount {
+                color: #667eea;
+            }
+
+    .btn-order {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 12px;
+        padding: 16px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: white;
+        width: 100%;
+        margin-top: 24px;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(102,126,234,.3);
+    }
+
+        .btn-order:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(102,126,234,.4);
+        }
+
+        .btn-order:active {
+            transform: translateY(0);
+        }
+
+    .empty-cart {
+        padding: 60px 40px;
+        text-align: center;
+    }
+
+    .empty-cart-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+
+    .empty-cart p {
+        font-size: 1.1rem;
+        color: #718096;
+        margin-bottom: 20px;
+    }
+
+    .empty-cart .btn {
+        background: #667eea;
+        color: white;
+        padding: 12px 32px;
+        border-radius: 10px;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s;
+    }
+
+        .empty-cart .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+    @@media (max-width: 768px) {
+        .cart-item {
+            grid-template-columns: 60px 1fr;
+            gap: 12px;
+        }
+
+            .cart-item > div:nth-child(3),
+            .cart-item > div:nth-child(4) {
+                grid-column: 2;
+            }
+
+        .summary {
+            margin-top: 20px;
+        }
+    }
+</style>
+
+<div class="checkout-wrap">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="cart-card">
+                <div class="cart-head">
+                    <h3>🛒 Giỏ hàng của bạn</h3>
+                    <a class="btn-link" href="@Url.Action("Index","Cart")">← Quay lại giỏ hàng</a>
+                </div>
+                <div class="cart-body">
+                    @if (Model == null || Model.CartItem == null || !Model.CartItem.Any())
+                    {
+                        <div class="empty-cart">
+                            <div class="empty-cart-icon">🛍️</div>
+                            <p>Giỏ hàng của bạn đang trống</p>
+                            <a href="@Url.Action("Index","Product")" class="btn">Khám phá sản phẩm</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="cart-item header">
+                            <div></div>
+                            <div>Sản phẩm</div>
+                            <div class="text-right">Đơn giá</div>
+                            <div class="text-right">Thành tiền</div>
+                        </div>
+
+                        foreach (var i in Model.CartItem)
+                        {
+                            var unit = i.UnitPrice != 0 ? i.UnitPrice : (i.Product?.ProductPrice ?? 0);
+                            var line = unit * i.Quantity;
+                            tong += line;
+
+                            <div class="cart-item">
+                                <img class="thumb" src="@(i.Product?.ProductImage ?? Url.Content("~/Content/img/no-image.png"))" alt="@i.Product?.ProductName" />
+                                <div>
+                                    <div class="prod-name">@i.Product?.ProductName</div>
+                                    <span class="prod-quantity">
+                                        <span>×</span>
+                                        <strong>@i.Quantity</strong>
+                                    </span>
+                                </div>
+                                <div class="text-right price">@unit.ToString("n0") đ</div>
+                                <div class="text-right total-price">@line.ToString("n0") đ</div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="summary">
+                <div class="summary-card">
+                    <h4>🚚 Thông tin giao hàng</h4>
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    @using (Html.BeginForm("Checkout", "Order", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label for="addressDelivery" class="form-label">Địa chỉ nhận hàng</label>
+                            <textarea class="form-control" id="addressDelivery" name="addressDelivery" rows="3" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố" required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Phương thức thanh toán</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="pmCOD" name="paymentMethod" value="COD" checked />
+                                <label class="form-check-label" for="pmCOD">
+                                    <span class="payment-icon">💵</span>
+                                    Thanh toán khi nhận hàng (COD)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="pmPAID" name="paymentMethod" value="PAID" />
+                                <label class="form-check-label" for="pmPAID">
+                                    <span class="payment-icon">💳</span>
+                                    Chuyển khoản trước
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="note" class="form-label">Ghi chú (tùy chọn)</label>
+                            <input class="form-control" id="note" name="note" placeholder="Ví dụ: giao giờ hành chính, gọi trước khi đến..." />
+                        </div>
+
+                        <div class="summary-divider"></div>
+
+                        <div class="summary-row subtotal">
+                            <span>Tạm tính</span>
+                            <strong>@tong.ToString("n0") đ</strong>
+                        </div>
+                        <div class="summary-row shipping">
+                            <span>Phí vận chuyển</span>
+                            <span class="badge">Miễn phí</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Tổng cộng</span>
+                            <span class="amount">@tong.ToString("n0") đ</span>
+                        </div>
+
+                        <button type="submit" class="btn-order">
+                            Đặt hàng ngay 🚀
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

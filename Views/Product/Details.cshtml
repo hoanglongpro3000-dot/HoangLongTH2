@@ -1,0 +1,194 @@
+﻿@model HoangLongTH.Models.Product
+@{
+    ViewBag.Title = Model.ProductName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var img = string.IsNullOrWhiteSpace(Model.ProductImage)
+                ? Url.Content("~/Content/imgs/no-image.png")
+                : Url.Content(Model.ProductImage);
+    var priceForJs = (long)Model.ProductPrice;
+}
+<div class="product-detail-wrap">
+    <div class="breadcrumb-custom">
+        <a href="@Url.Action("Index","Home")">Trang chủ</a>
+        <span>›</span>
+        <a href="@Url.Action("Index","Product")">Sản phẩm</a>
+        <span>›</span>
+        <span>@Model.ProductName</span>
+    </div>
+
+    <div class="product-main">
+        <div class="row g-0">
+            <div class="col-md-6">
+                <div class="product-gallery">
+                    <img src="@img" alt="@Model.ProductName" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="product-info">
+                    <h1 class="product-title">@Model.ProductName</h1>
+
+                    <div class="rating-section">
+                        <div class="stars">★★★★★</div>
+                        <span class="rating-text">(128 đánh giá)</span>
+                    </div>
+
+                    <div class="price-section">
+                        <div class="current-price">
+                            @Model.ProductPrice.ToString("N0")
+                            <span class="currency">đ</span>
+                        </div>
+                    </div>
+
+                    <div class="meta-info">
+                        <div class="meta-item">
+                            <span class="icon">📦</span>
+                            <strong>Danh mục:</strong>
+                            <span>@(Model.Category != null ? Model.Category.CategoryName : "Chưa phân loại")</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="icon">✓</span>
+                            <strong>Tình trạng:</strong>
+                            <span style="color: #48bb78; font-weight: 600;">Còn hàng</span>
+                        </div>
+                    </div>
+
+                    <div class="quantity-section">
+                        <div class="quantity-label">Số lượng:</div>
+                        <div class="quantity-control">
+                            <div class="qty-input-group">
+                                <button type="button" onclick="decreaseQty()">−</button>
+                                <input id="pd-qty" type="number" value="1" min="1" max="99" readonly />
+                                <button type="button" onclick="increaseQty()">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn-add-cart" onclick="addToCart(@Model.ProductID)">
+                            <span>🛒</span>
+                            <span>Thêm vào giỏ</span>
+                        </button>
+                        <button class="btn-buy-now" onclick="buyNow(@Model.ProductID)">
+                            <span>⚡</span>
+                            <span>Mua ngay</span>
+                        </button>
+                    </div>
+
+                    <div class="features-section">
+                        <div class="feature-item">
+                            <span class="icon">🚚</span>
+                            <span class="text">Miễn phí vận chuyển</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="icon">🔒</span>
+                            <span class="text">Thanh toán an toàn</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="icon">↩️</span>
+                            <span class="text">Đổi trả trong 7 ngày</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="description-section">
+        <h3>
+            <span>📝</span>
+            <span>Mô tả sản phẩm</span>
+        </h3>
+        <div class="description-content">
+            @if (!string.IsNullOrWhiteSpace(Model.ProductDecription))
+            {
+                @Html.Raw(HttpUtility.HtmlEncode(Model.ProductDecription)?.Replace("\n", "<br/>"))
+            }
+            else
+            {
+                <p style="color: #a0aec0;">Chưa có mô tả chi tiết cho sản phẩm này.</p>
+            }
+        </div>
+    </div>
+
+    @if (ViewBag.Related != null)
+    {
+        var related = (IEnumerable<HoangLongTH.Models.Product>)ViewBag.Related;
+        if (related.Any())
+        {
+            <div class="related-section">
+                <h3>
+                    <span>🔥</span>
+                    <span>Sản phẩm liên quan</span>
+                </h3>
+                <div class="related-grid">
+                    @foreach (var p in related)
+                    {
+                        var rimg = string.IsNullOrWhiteSpace(p.ProductImage)
+                                      ? Url.Content("~/Content/imgs/no-image.png")
+                                      : Url.Content(p.ProductImage);
+                        <div class="product-card">
+                            <a href="@Url.Action("Details","Product", new { id = p.ProductID })">
+                                <img src="@rimg" alt="@p.ProductName" />
+                            </a>
+                            <div class="card-body">
+                                <a href="@Url.Action("Details","Product", new { id = p.ProductID })" class="card-title">
+                                    @p.ProductName
+                                </a>
+                                <div class="card-price">@p.ProductPrice.ToString("N0") đ</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@section scripts{
+    <script>
+        function increaseQty() {
+            const input = document.getElementById('pd-qty');
+            const val = parseInt(input.value || '1', 10);
+            if (val < 99) input.value = val + 1;
+        }
+
+        function decreaseQty() {
+            const input = document.getElementById('pd-qty');
+            const val = parseInt(input.value || '1', 10);
+            if (val > 1) input.value = val - 1;
+        }
+
+        function addToCart(productId) {
+            const qty = parseInt(document.getElementById('pd-qty').value || '1', 10);
+
+            // Increment cart count immediately for smooth UX
+            if (window.CartManager) {
+                window.CartManager.increment(qty);
+            }
+
+            // Redirect to CartController/AddItem (sau 300ms để user thấy notification)
+            setTimeout(() => {
+                window.location.href = '@Url.Action("AddItem", "Cart")?id=' + productId + '&quantity=' + qty;
+            }, 300);
+        }
+
+        function buyNow(productId) {
+            const qty = parseInt(document.getElementById('pd-qty').value || '1', 10);
+
+            // Increment cart count
+            if (window.CartManager) {
+                window.CartManager.increment(qty);
+            }
+
+            // Thêm vào giỏ rồi chuyển thẳng sang checkout
+            setTimeout(() => {
+                window.location.href = '@Url.Action("AddItem", "Cart")?id=' + productId + '&quantity=' + qty + '&redirect=checkout';
+            }, 300);
+        }
+
+        // Prevent manual input in quantity field
+        document.getElementById('pd-qty').addEventListener('keydown', function(e) {
+            e.preventDefault();
+        });
+    </script>
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="d5f72292377d4e42978224f96b3c83de" Name="Diagram1" ZoomLevel="74">
+        <EntityTypeShape EntityType="MyStroreModel.Cart" Width="1.5" PointX="3" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MyStroreModel.CartItem" Width="1.5" PointX="5.25" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="MyStroreModel.Category" Width="1.5" PointX="0.75" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MyStroreModel.Customer" Width="1.5" PointX="0.75" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="MyStroreModel.Order" Width="1.5" PointX="6" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="MyStroreModel.OrderDetail" Width="1.5" PointX="8.25" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MyStroreModel.Product" Width="1.5" PointX="3" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="MyStroreModel.sysdiagrams" Width="1.5" PointX="8.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MyStroreModel.User" Width="1.5" PointX="1.5" PointY="12" IsExpanded="true" />
+        <AssociationConnector Association="MyStroreModel.FK_Cart_Customer" ManuallyRouted="false" />
+        <AssociationConnector Association="MyStroreModel.FK_CartItem_Cart" ManuallyRouted="false" />
+        <AssociationConnector Association="MyStroreModel.FK_CartItem_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="MyStroreModel.FK_Pro_Category" ManuallyRouted="false" />
+        <AssociationConnector Association="MyStroreModel.FK__Order__CustomerI__412EB0B6" ManuallyRouted="false" />
+        <AssociationConnector Association="MyStroreModel.FK_User_Customer" ManuallyRouted="false" />
+        <AssociationConnector Association="MyStroreModel.FK__OrderDeta__Order__44FF419A" ManuallyRouted="false" />
+        <AssociationConnector Association="MyStroreModel.FK__OrderDeta__Produ__440B1D61" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

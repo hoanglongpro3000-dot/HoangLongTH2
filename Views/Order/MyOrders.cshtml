@@ -1,0 +1,111 @@
+﻿@model IEnumerable<HoangLongTH.Models.Order>
+@{
+    ViewBag.Title = "Đơn hàng của tôi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int page = ViewBag.Page ?? 1;
+    int pageSize = ViewBag.PageSize ?? 10;
+    int total = ViewBag.Total ?? (Model?.Count() ?? 0);
+    int totalPages = (int)Math.Ceiling((double)total / pageSize);
+    Func<string, string> statusClass = s =>
+        s == "Đã thanh toán" ? "badge-success" :
+        s != null && s.ToLower().Contains("chưa") ? "badge-warning" : "badge-secondary";
+}
+
+<style>
+    .orders-wrap {
+        max-width: 1100px;
+        margin: 20px auto
+    }
+
+    .table-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 8px 22px rgba(0,0,0,.06);
+        overflow: hidden
+    }
+
+        .table-card .head {
+            padding: 18px 22px;
+            border-bottom: 1px solid #eee
+        }
+
+    .table > thead th {
+        white-space: nowrap
+    }
+
+    .pager .page-link {
+        border-radius: 10px;
+        margin: 0 3px
+    }
+</style>
+
+<div class="orders-wrap">
+    <div class="table-card">
+        <div class="head d-flex justify-content-between align-items-center">
+            <h3 class="m-0">📦 Lịch sử đơn hàng</h3>
+            <span class="text-muted">Tổng: @total đơn</span>
+        </div>
+
+        <div class="p-3">
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Ngày đặt</th>
+                            <th>Địa chỉ</th>
+                            <th class="text-end">Tổng tiền</th>
+                            <th>Thanh toán</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model == null || !Model.Any())
+                        {
+                            <tr><td colspan="6" class="text-center text-muted py-4">Chưa có đơn hàng nào.</td></tr>
+                        }
+                        else
+                        {
+                            foreach (var o in Model)
+                            {
+                                <tr>
+                                    <td><strong>#@o.OrderID</strong></td>
+                                    <td>@o.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td class="text-truncate" style="max-width:360px">@o.AddressDelivery</td>
+                                    <td class="text-end fw-semibold">@o.TotalAmount.ToString("n0") đ</td>
+                                    <td>
+                                        <span class="badge @statusClass(o.PaymentStatus)" style="padding:.45rem .65rem">@o.PaymentStatus</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <a class="btn btn-sm btn-outline-primary" href="@Url.Action("Details","Order", new { id = o.OrderID })">Chi tiết</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @if (totalPages > 1)
+            {
+                <nav class="pager d-flex justify-content-center">
+                    <ul class="pagination">
+                        <li class="page-item @(page==1?"disabled":"")">
+                            <a class="page-link" href="@Url.Action("MyOrders", new { page = page-1, pageSize = pageSize })">«</a>
+                        </li>
+                        @for (int p = 1; p <= totalPages; p++)
+                        {
+                            <li class="page-item @(p==page?"active":"")">
+                                <a class="page-link" href="@Url.Action("MyOrders", new { page = p, pageSize = pageSize })">@p</a>
+                            </li>
+                        }
+                        <li class="page-item @(page==totalPages?"disabled":"")">
+                            <a class="page-link" href="@Url.Action("MyOrders", new { page = page+1, pageSize = pageSize })">»</a>
+                        </li>
+                    </ul>
+                </nav>
+            }
+        </div>
+    </div>
+</div>
+

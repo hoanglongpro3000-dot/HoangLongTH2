@@ -1,0 +1,56 @@
+﻿@model HoangLongTH.Models.Customer
+
+@{
+    ViewBag.Title = "Trang khách hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2>Xin chào, @Model.CustomerName!</h2>
+
+    <div class="card mt-3 p-3">
+        <h4>Thông tin cá nhân</h4>
+        <p><strong>Tài khoản:</strong> @Model.Username</p>
+        <p><strong>Email:</strong> @(string.IsNullOrEmpty(Model.CustomerEmail) ? "(chưa cập nhật)" : Model.CustomerEmail)</p>
+        <p><strong>Số điện thoại:</strong> @(string.IsNullOrEmpty(Model.CustomerPhone) ? "(chưa cập nhật)" : Model.CustomerPhone)</p>
+        <p><strong>Địa chỉ:</strong> @(string.IsNullOrEmpty(Model.CustomerAddress) ? "(chưa cập nhật)" : Model.CustomerAddress)</p>
+    </div>
+
+    <div class="mt-4">
+        <a href="@Url.Action("Index", "Cart")" class="btn btn-outline-primary">
+            🛒 Xem giỏ hàng
+        </a>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
+            ⬅️ Về trang chủ
+        </a>
+    </div>
+
+    @if (Model.Order != null && Model.Order.Any())
+    {
+        <div class="card mt-4 p-3">
+            <h4>Lịch sử đơn hàng gần đây</h4>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Ngày đặt</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái thanh toán</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var o in Model.Order.OrderByDescending(x => x.OrderDate).Take(5))
+                    {
+                        <tr>
+                            <td>@o.OrderID</td>
+                            <td>@o.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@String.Format("{0:N0} ₫", o.TotalAmount)</td>
+                            <td>@o.PaymentStatus</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+

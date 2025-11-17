@@ -1,0 +1,120 @@
+﻿@model IEnumerable<HoangLongTH.Models.Order>
+
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .order-card {
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+
+        .order-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+    .table thead {
+        background: linear-gradient(90deg, #0d6efd, #0b5ed7);
+        color: #fff;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(13,110,253,0.08);
+    }
+
+    .btn-custom {
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+        .btn-custom:hover {
+            transform: scale(1.05);
+        }
+
+    .page-header {
+        border-bottom: 3px solid #0d6efd;
+        padding-bottom: 10px;
+        margin-bottom: 25px;
+    }
+
+    .table td, .table th {
+        vertical-align: middle !important;
+    }
+
+    .badge-paid {
+        background-color: #198754;
+    }
+
+    .badge-unpaid {
+        background-color: #dc3545;
+    }
+
+    .badge-pending {
+        background-color: #ffc107;
+        color: #000;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h2 class="text-primary fw-bold">
+            <i class="bi bi-receipt"></i> Quản lý đơn hàng
+        </h2>
+        @Html.ActionLink("➕ Thêm đơn hàng", "Create", null, new { @class = "btn btn-primary btn-lg text-white btn-custom shadow-sm" })
+    </div>
+
+    <div class="card order-card p-3">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead>
+                    <tr>
+                        <th>Ngày đặt hàng</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái thanh toán</th>
+                        <th>Địa chỉ giao hàng</th>
+                        <th>Khách hàng</th>
+                        <th style="width:180px;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.OrderDate.ToString("dd/MM/yyyy")</td>
+                            <td class="fw-bold text-success">@String.Format("{0:N0} ₫", item.TotalAmount)</td>
+                            <td>
+                                @if (item.PaymentStatus == "Đã thanh toán" || item.PaymentStatus == "Paid")
+                                {
+                                    <span class="badge badge-paid">Đã thanh toán</span>
+                                }
+                                else if (item.PaymentStatus == "Chờ xử lý" || item.PaymentStatus == "Pending")
+                                {
+                                    <span class="badge badge-pending">Chờ xử lý</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-unpaid">Chưa thanh toán</span>
+                                }
+                            </td>
+                            <td class="text-muted">@item.AddressDelivery</td>
+                            <td>@item.Customer?.CustomerName</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    @Html.ActionLink("✏️", "Edit", new { id = item.OrderID }, new { @class = "btn btn-warning btn-sm text-white btn-custom" })
+                                    @Html.ActionLink("👁️", "Details", new { id = item.OrderID }, new { @class = "btn btn-info btn-sm text-white btn-custom" })
+                                    @Html.ActionLink("🗑️", "Delete", new { id = item.OrderID }, new { @class = "btn btn-danger btn-sm btn-custom", onclick = "return confirm('Bạn có chắc muốn xóa đơn hàng này không?');" })
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

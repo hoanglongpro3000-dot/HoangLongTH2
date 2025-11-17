@@ -1,0 +1,145 @@
+﻿@model IEnumerable<HoangLongTH.Models.Product>
+
+@{
+    ViewBag.Title = "Danh sách sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        border-bottom: 3px solid #007bff;
+        padding-bottom: 10px;
+    }
+
+        .page-header h2 {
+            font-weight: 700;
+            color: #0056b3;
+        }
+
+    .table thead {
+        background: linear-gradient(90deg, #007bff, #00aaff);
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f2f8ff;
+        transition: all 0.2s ease;
+    }
+
+    .btn {
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-weight: 500;
+    }
+
+        .btn i {
+            margin-right: 4px;
+        }
+
+    .product-img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 2px solid #e0e0e0;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+    }
+
+        .product-img:hover {
+            transform: scale(1.1);
+        }
+
+    .table-container {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+</style>
+<!-- Đoạn thêm -->
+@using (Html.BeginForm("Index", "Products", FormMethod.Get, new { area = "Admin" }))
+{
+    <div class="mb-3">
+        Tên sản phẩm:
+        <input type="text"
+               name="SearchString"
+               value="@ViewBag.SearchString"
+               placeholder="Nhập tên sản phẩm..."
+               class="form-control d-inline-block"
+               style="width:260px; display:inline-block;" />
+        <input type="submit" value="Tìm kiếm" class="btn btn-warning" />
+        <a href="@Url.Action("Index", "Products", new { area = "Admin" })" class="btn btn-secondary">
+            Reset
+        </a>
+    </div>
+}
+
+
+<!--Kết thúc -->
+
+<div class="container mt-4 table-container">
+    <div class="page-header">
+        <h2><i class="bi bi-box-seam"></i> Danh sách sản phẩm</h2>
+        @Html.ActionLink("➕ Thêm sản phẩm mới", "Create", null, new { @class = "btn btn-primary shadow-sm" })
+    </div>
+
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="text-center">
+            <tr>
+                <th style="width:180px;">Tên sản phẩm</th>
+                <th>Mô tả</th>
+                <th style="width:120px;">Giá</th>
+                <th style="width:100px;">Hình ảnh</th>
+                <th style="width:140px;">Danh mục</th>
+                <th style="width:180px;">Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted">
+                        Không tìm thấy sản phẩm nào phù hợp với từ khóa "@ViewBag.SearchString".
+                    </td>
+                </tr>
+            }
+            else
+            {
+                foreach (var item in Model)
+                {
+                    <tr class="text-center">
+                        <td class="fw-semibold text-start">@item.ProductName</td>
+                        <td class="text-muted text-start">@item.ProductDecription</td>
+                        <td class="fw-bold text-primary">@String.Format("{0:N0} ₫", item.ProductPrice)</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.ProductImage))
+                            {
+                                <img src="@Url.Content(item.ProductImage)" alt="Image" class="product-img" />
+                            }
+                            else
+                            {
+                                <span class="text-muted fst-italic">Không có ảnh</span>
+                            }
+                        </td>
+                        <td>@(item.Category != null ? item.Category.CategoryName : "Chưa có")</td>
+                        <td>
+                            @Html.ActionLink(" Sửa", "Edit", new { id = item.ProductID }, new { @class = "btn btn-sm btn-warning me-1 bi bi-pencil-square" })
+                            @Html.ActionLink(" Xem", "Details", new { id = item.ProductID }, new { @class = "btn btn-sm btn-info text-white me-1 bi bi-eye" })
+                            @Html.ActionLink(" Xóa", "Delete", new { id = item.ProductID }, new
+                            {
+                                @class = "btn btn-sm btn-danger bi bi-trash",
+                                onclick = "return confirm('Bạn có chắc muốn xóa sản phẩm này không?');"
+                            })
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div></table>

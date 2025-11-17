@@ -1,0 +1,427 @@
+﻿@model HoangLongTH.Models.Order
+@{
+    ViewBag.Title = "Chi tiết đơn hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // Chọn màu badge theo trạng thái thanh toán
+    Func<string, string> statusClass = s =>
+        s == "Đã thanh toán"
+            ? "badge-success"
+            : (!string.IsNullOrEmpty(s) && s.IndexOf("chưa", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                ? "badge-warning"
+                : "badge-secondary";
+
+    decimal tong = 0m;
+}
+
+<style>
+    .order-wrap {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 0 15px;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+        margin-bottom: 20px;
+        transition: all 0.3s;
+    }
+
+        .back-link:hover {
+            color: #5568d3;
+            transform: translateX(-4px);
+        }
+
+    .info-card, .items-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0,0,0,.08);
+        transition: all 0.3s ease;
+    }
+
+        .info-card:hover, .items-card:hover {
+            box-shadow: 0 12px 40px rgba(0,0,0,.12);
+        }
+
+    .info-card {
+        padding: 28px 32px;
+        margin-bottom: 24px;
+    }
+
+    .order-header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .order-title {
+        margin: 0;
+        color: #2d3748;
+        font-weight: 700;
+        font-size: 1.8rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .order-id {
+        color: #667eea;
+    }
+
+    .order-date {
+        color: #718096;
+        margin-top: 8px;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .badge {
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .badge-success {
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(72,187,120,.3);
+    }
+
+    .badge-warning {
+        background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(237,137,54,.3);
+    }
+
+    .badge-secondary {
+        background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(113,128,150,.3);
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-top: 24px;
+    }
+
+    .info-block {
+        background: #f8f9ff;
+        padding: 20px;
+        border-radius: 12px;
+        border-left: 4px solid #667eea;
+    }
+
+    .info-label {
+        color: #718096;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .info-value {
+        color: #2d3748;
+        font-weight: 600;
+        font-size: 1.05rem;
+    }
+
+    .items-card {
+        overflow: hidden;
+    }
+
+    .item-row {
+        display: grid;
+        grid-template-columns: 80px 1fr 140px 100px 140px;
+        gap: 16px;
+        align-items: center;
+        padding: 20px 28px;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background 0.3s;
+    }
+
+        .item-row:hover {
+            background: #f8f9ff;
+        }
+
+        .item-row.head {
+            font-weight: 700;
+            color: #4a5568;
+            background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
+            border-bottom: 2px solid #e2e8f0;
+            font-size: 0.9rem;
+        }
+
+            .item-row.head:hover {
+                background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
+            }
+
+    .thumb {
+        width: 72px;
+        height: 72px;
+        border-radius: 12px;
+        object-fit: cover;
+        border: 2px solid #f1f1f1;
+        transition: transform 0.3s;
+    }
+
+    .item-row:hover .thumb {
+        transform: scale(1.08);
+    }
+
+    .product-name {
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 6px;
+        font-size: 1.05rem;
+    }
+
+    .product-id {
+        font-size: 0.85rem;
+        color: #718096;
+        background: #e2e8f0;
+        padding: 4px 10px;
+        border-radius: 12px;
+        display: inline-block;
+    }
+
+    .text-end {
+        text-align: right;
+    }
+
+    .price-col {
+        font-size: 1.05rem;
+        color: #4a5568;
+    }
+
+    .qty-col {
+        font-weight: 600;
+        color: #667eea;
+        background: #e7f3ff;
+        padding: 6px 16px;
+        border-radius: 20px;
+        text-align: center;
+        justify-self: end;
+    }
+
+    .total-col {
+        font-weight: 700;
+        color: #667eea;
+        font-size: 1.1rem;
+    }
+
+    .totals {
+        padding: 28px 32px;
+        background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
+        border-top: 2px dashed #e2e8f0;
+    }
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        color: #4a5568;
+        font-size: 1.05rem;
+    }
+
+        .total-row.shipping {
+            font-size: 0.95rem;
+            color: #718096;
+        }
+
+            .total-row.shipping .free-badge {
+                background: #48bb78;
+                color: white;
+                padding: 4px 12px;
+                border-radius: 12px;
+                font-size: 0.8rem;
+                font-weight: 600;
+            }
+
+        .total-row.grand-total {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            padding-top: 16px;
+            border-top: 2px dashed #e2e8f0;
+            margin-top: 8px;
+        }
+
+            .total-row.grand-total .amount {
+                color: #667eea;
+            }
+
+    .empty-state {
+        padding: 60px 40px;
+        text-align: center;
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+
+    .empty-text {
+        color: #718096;
+        font-size: 1.1rem;
+    }
+
+    @@media (max-width: 768px) {
+        .item-row {
+            grid-template-columns: 60px 1fr;
+            gap: 12px;
+        }
+
+            .item-row > div:nth-child(3),
+            .item-row > div:nth-child(4),
+            .item-row > div:nth-child(5) {
+                grid-column: 2;
+            }
+
+        .order-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="order-wrap">
+    <a class="back-link" href="@Url.Action("MyOrders","Order")">
+        <span>←</span>
+        <span>Quay lại danh sách đơn</span>
+    </a>
+
+    <div class="info-card">
+        <div class="order-header">
+            <div>
+                <h3 class="order-title">
+                    <span>📦</span>
+                    <span>Đơn hàng <span class="order-id">#@Model.OrderID</span></span>
+                </h3>
+                <div class="order-date">
+                    <span>🕒</span>
+                    <span>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</span>
+                </div>
+            </div>
+            <div>
+                <span class="badge @statusClass(Model.PaymentStatus)">
+                    @if (Model.PaymentStatus == "Đã thanh toán")
+                    {
+                        <span>✓</span>
+                    }
+                    else
+                    {
+                        <span>⏳</span>
+                    }
+                    <span>@Model.PaymentStatus</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-block">
+                <div class="info-label">
+                    <span>👤</span>
+                    <span>Khách hàng</span>
+                </div>
+                <div class="info-value">
+                    @if (Model.Customer != null)
+                    {
+                        <div>@Model.Customer.CustomerName</div>
+                        <div style="font-size: 0.9rem; color: #718096; font-weight: 400; margin-top: 4px;">@Model.Customer.Username</div>
+                    }
+                    else
+                    {
+                        <span style="color: #718096;">(Không có dữ liệu khách hàng)</span>
+                    }
+                </div>
+            </div>
+            <div class="info-block">
+                <div class="info-label">
+                    <span>🚚</span>
+                    <span>Địa chỉ giao hàng</span>
+                </div>
+                <div class="info-value">@Model.AddressDelivery</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="items-card">
+        <div class="item-row head">
+            <div></div>
+            <div>Sản phẩm</div>
+            <div class="text-end">Đơn giá</div>
+            <div class="text-end">Số lượng</div>
+            <div class="text-end">Thành tiền</div>
+        </div>
+
+        @if (Model.OrderDetail == null || !Model.OrderDetail.Any())
+        {
+            <div class="empty-state">
+                <div class="empty-icon">📋</div>
+                <div class="empty-text">Đơn hàng không có dòng chi tiết.</div>
+            </div>
+        }
+        else
+        {
+            foreach (var d in Model.OrderDetail)
+            {
+                var unit = d.UnitPrice;
+                var qty = d.Quantity;
+                var line = unit * qty;
+                tong += line;
+
+                <div class="item-row">
+                    <img class="thumb" src="@(d.Product?.ProductImage ?? Url.Content("~/Content/img/no-image.png"))" alt="@d.Product?.ProductName" />
+                    <div>
+                        <div class="product-name">@d.Product?.ProductName</div>
+                        <span class="product-id">Mã: @d.ProductID</span>
+                    </div>
+                    <div class="text-end price-col">@unit.ToString("n0") đ</div>
+                    <div class="qty-col">@qty</div>
+                    <div class="text-end total-col">@line.ToString("n0") đ</div>
+                </div>
+            }
+        }
+
+        <div class="totals">
+            <div class="total-row">
+                <span>Tạm tính</span>
+                <strong>@tong.ToString("n0") đ</strong>
+            </div>
+            <div class="total-row shipping">
+                <span>Phí vận chuyển</span>
+                <span class="free-badge">Miễn phí</span>
+            </div>
+            <div class="total-row grand-total">
+                <span>Tổng cộng</span>
+                <span class="amount">@Model.TotalAmount.ToString("n0") đ</span>
+            </div>
+        </div>
+    </div>
+</div>

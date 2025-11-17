@@ -1,0 +1,47 @@
+﻿@model HoangLongTH.Models.Order
+@{
+    ViewBag.Title = "Đặt hàng thành công";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .success-wrap {
+        max-width: 900px;
+        margin: 30px auto
+    }
+
+    .ok-card {
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 10px 24px rgba(0,0,0,.08);
+        padding: 26px
+    }
+</style>
+
+<div class="success-wrap">
+    <div class="ok-card text-center">
+        <div class="display-4 mb-2">✅</div>
+        <h2>Đặt hàng thành công!</h2>
+        <p class="text-muted">Mã đơn: <strong>#@Model.OrderID</strong> • Ngày: @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
+
+        <div class="mt-3">
+            <span class="badge badge-pill @(Model.PaymentStatus == "Đã thanh toán" ? "badge-success" : "badge-warning")" style="font-size:14px;padding:8px 12px">
+                @Model.PaymentStatus
+            </span>
+        </div>
+
+        <div class="mt-3">
+            <div class="text-muted">Địa chỉ giao hàng</div>
+            <div class="fw-semibold">@Model.AddressDelivery</div>
+        </div>
+
+        <h4 class="mt-4">Tổng tiền: <span class="text-primary">@Model.TotalAmount.ToString("n0") đ</span></h4>
+
+        <div class="mt-4 d-flex gap-2 justify-content-center">
+            <a class="btn btn-outline-primary" href="@Url.Action("Details","Order", new { id = Model.OrderID })">Xem chi tiết đơn</a>
+            <a class="btn btn-primary" href="@Url.Action("Index","Product")">Tiếp tục mua sắm</a>
+        </div>
+
+        @* Chú ý: nếu action OrderSuccess không Include OrderDetail, view vẫn hoạt động, chi tiết xem ở trang Details *@
+    </div>
+</div>
+

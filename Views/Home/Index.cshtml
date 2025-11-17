@@ -1,0 +1,553 @@
+﻿@model IEnumerable<HoangLongTH.Models.Product>
+@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@functions{
+    string CatSlug(int categoryId)
+    {
+        switch (categoryId)
+        {
+            case 1: return "phone";
+            case 2: return "laptop";
+            case 3: return "accessory";
+            default: return "all";
+        }
+    }
+    string CatLabel(int categoryId)
+    {
+        switch (categoryId)
+        {
+            case 1: return "Điện thoại";
+            case 2: return "Laptop";
+            case 3: return "Phụ kiện";
+            default: return "Khác";
+        }
+    }
+}
+
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 80px 20px;
+        text-align: center;
+        color: white;
+        margin-bottom: 60px;
+        border-radius: 0 0 50px 50px;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,.2);
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+        opacity: 0.95;
+        margin-bottom: 30px;
+    }
+
+    .products-section {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px 60px;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+    }
+
+    .section-subtitle {
+        font-size: 1.1rem;
+        color: #718096;
+    }
+
+    .filter-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 40px;
+    }
+
+    .filter-btn {
+        padding: 12px 28px;
+        border: 2px solid #e2e8f0;
+        background: white;
+        border-radius: 25px;
+        font-weight: 600;
+        color: #4a5568;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+        .filter-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr ));
+        gap: 30px;
+    }
+
+    /* Responsive grid - tối ưu cho các kích thước màn hình */
+    @@media (max-width: 1400px) {
+        .products-grid {
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 25px;
+        }
+    }
+
+    @@media (max-width: 1200px) {
+        .products-grid {
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .btn-detail,
+        .btn-add-cart {
+            font-size: 0.85rem;
+            padding: 10px 4px;
+            gap: 4px;
+        }
+    }
+
+    @@media (max-width: 992px) {
+        .products-grid {
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        }
+
+        .btn-detail,
+        .btn-add-cart {
+            font-size: 0.8rem;
+            padding: 10px 2px;
+        }
+
+            .btn-detail span:last-child,
+            .btn-add-cart span:last-child {
+                font-size: 0.8rem;
+            }
+    }
+
+    .product-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,.08);
+        transition: all 0.3s ease;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 40px rgba(0,0,0,.15);
+        }
+
+    .product-tag {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: white;
+        z-index: 10;
+        box-shadow: 0 4px 12px rgba(0,0,0,.2);
+    }
+
+        .product-tag.phone {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .product-tag.laptop {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .product-tag.accessory {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .product-tag.all {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+    /* Image container với height cố định */
+    .product-image-container {
+        width: 100%;
+        height: 250px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f7fafc;
+    }
+
+    .product-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 20px;
+        transition: transform 0.3s ease;
+    }
+
+    .product-card:hover img {
+        transform: scale(1.05);
+    }
+
+    .product-card h3 {
+        padding: 0 20px;
+        margin: 20px 0 12px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2d3748;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 58px;
+    }
+
+        .product-card h3 a {
+            color: #2d3748;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+            .product-card h3 a:hover {
+                color: #667eea;
+            }
+
+    .product-spec {
+        padding: 0 20px;
+        color: #718096;
+        font-size: 0.9rem;
+        margin-bottom: 16px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 42px;
+    }
+
+    .product-price {
+        padding: 0 20px;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #667eea;
+        margin-bottom: 20px;
+    }
+
+    .product-actions {
+        padding: 0 20px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: auto;
+    }
+
+    .btn-row {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-detail,
+    .btn-add-cart {
+        flex: 1;
+        padding: 12px 6px;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-size: 0.9rem;
+        line-height: 1.2;
+        white-space: nowrap;
+        min-width: 0;
+    }
+
+    .btn-detail {
+        background: white;
+        border: 2px solid #667eea;
+        color: #667eea;
+    }
+
+        .btn-detail:hover {
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-add-cart {
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 12px rgba(72,187,120,.3);
+    }
+
+        .btn-add-cart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(72,187,120,.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-buy-now {
+        width: 100%;
+        padding: 14px 20px;
+        background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 700;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 1.05rem;
+        box-shadow: 0 4px 12px rgba(245,101,101,.3);
+    }
+
+        .btn-buy-now:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245,101,101,.4);
+            color: white;
+            text-decoration: none;
+        }
+
+    /* Icon và text trong buttons */
+    .btn-detail span:first-child,
+    .btn-add-cart span:first-child {
+        font-size: 1rem;
+        line-height: 1;
+        flex-shrink: 0;
+    }
+
+    .btn-detail span:last-child,
+    .btn-add-cart span:last-child {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .btn-buy-now span:first-child {
+        font-size: 1.1rem;
+        line-height: 1;
+        flex-shrink: 0;
+    }
+
+    .empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 80px 20px;
+        color: #718096;
+        font-size: 1.2rem;
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+
+    @@media (max-width: 768px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+        }
+
+        .products-grid {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .filter-buttons {
+            gap: 8px;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+
+        .product-image-container {
+            height: 200px;
+        }
+
+        .product-card img {
+            padding: 15px;
+        }
+
+        .btn-detail,
+        .btn-add-cart {
+            font-size: 0.8rem;
+            padding: 10px 4px;
+            gap: 4px;
+        }
+
+        .btn-buy-now {
+            font-size: 0.95rem;
+            padding: 12px 16px;
+        }
+    }
+</style>
+
+<div class="hero-section">
+    <h1 class="hero-title">🛍️ Chào mừng đến với cửa hàng</h1>
+    <p class="hero-subtitle">Khám phá những sản phẩm công nghệ tốt nhất</p>
+</div>
+
+<section class="products-section">
+    <div class="section-header">
+        <h2 class="section-title">
+            <span>🔥</span>
+            <span>Sản phẩm nổi bật</span>
+        </h2>
+        <p class="section-subtitle">Được khách hàng yêu thích nhất</p>
+    </div>
+
+    <div class="filter-buttons">
+        <button class="filter-btn active" onclick="filterProducts('all')">Tất cả</button>
+        <button class="filter-btn" onclick="filterProducts('phone')">📱 Điện thoại</button>
+        <button class="filter-btn" onclick="filterProducts('laptop')">💻 Laptop</button>
+        <button class="filter-btn" onclick="filterProducts('accessory')">🎧 Phụ kiện</button>
+    </div>
+
+    <div class="products-grid">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var p in Model)
+            {
+                var cat = CatSlug(p.CategoryID);
+                var catLabel = CatLabel(p.CategoryID);
+                var img = string.IsNullOrWhiteSpace(p.ProductImage)
+                            ? Url.Content("~/Content/imgs/no-image.png")
+                            : Url.Content(p.ProductImage);
+                var priceDisplay = p.ProductPrice.ToString("N0") + "₫";
+
+                <div class="product-card" data-category="@cat">
+                    <div class="product-tag @cat">@catLabel</div>
+
+                    <a href="@Url.Action("Details", "Product", new { id = p.ProductID })">
+                        <img src="@img" alt="@p.ProductName" />
+                    </a>
+
+                    <h3>
+                        <a href="@Url.Action("Details", "Product", new { id = p.ProductID })">
+                            @p.ProductName
+                        </a>
+                    </h3>
+
+                    <p class="product-spec">
+                        @((p.ProductDecription ?? "Chưa có mô tả").Length > 60
+                        ? p.ProductDecription.Substring(0, 60) + "..."
+                        : (p.ProductDecription ?? "Chưa có mô tả"))
+                    </p>
+
+                    <p class="product-price">@priceDisplay</p>
+
+                    <div class="product-actions">
+                        <div class="btn-row">
+                            <a class="btn-detail" href="@Url.Action("Details", "Product", new { id = p.ProductID })">
+                                <span>👁️</span>
+                                <span>Chi tiết</span>
+                            </a>
+                            <a class="btn-add-cart" href="@Url.Action("AddItem", "Cart", new { id = p.ProductID, quantity = 1 })">
+                                <span>🛒</span>
+                                <span>Giỏ hàng</span>
+                            </a>
+                        </div>
+                        <a class="btn-buy-now" href="@Url.Action("AddItem", "Cart", new { id = p.ProductID, quantity = 1, redirect = "checkout" })">
+                            <span>⚡</span>
+                            <span>MUA NGAY</span>
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-icon">📦</div>
+                <p>Chưa có sản phẩm. Hãy thêm sản phẩm trong Admin.</p>
+            </div>
+        }
+    </div>
+</section>
+
+@section scripts {
+    <script>
+        function filterProducts(category) {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Filter products
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'scale(1)';
+                    }, 10);
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.8)';
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                    }, 300);
+                }
+            });
+        }
+
+        // Add transition styles
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.style.transition = 'opacity 0.3s, transform 0.3s';
+            });
+        });
+    </script>
+}

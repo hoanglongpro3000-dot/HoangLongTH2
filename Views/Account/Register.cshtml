@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Đăng ký";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Đăng ký tài khoản</h2>
+
+@using (Html.BeginForm("Register", "Account", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label for="Username">Tên đăng nhập</label>
+        @Html.TextBox("Username", null, new { @class = "form-control" })
+        @Html.ValidationMessage("Username", "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        <label for="Password">Mật khẩu</label>
+        @Html.Password("Password", null, new { @class = "form-control" })
+        @Html.ValidationMessage("Password", "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        <label for="ConfirmPassword">Nhập lại mật khẩu</label>
+        @Html.Password("ConfirmPassword", null, new { @class = "form-control" })
+        @Html.ValidationMessage("ConfirmPassword", "", new { @class = "text-danger" })
+    </div>
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <button type="submit" class="btn btn-primary mt-3">Đăng ký</button>
+}
