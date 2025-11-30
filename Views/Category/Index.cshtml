@@ -1,0 +1,70 @@
+﻿@model PagedList.IPagedList<HoangLongTH.Models.Product>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Danh mục sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Danh mục sản phẩm</h2>
+
+<!-- Bộ lọc -->
+<form method="get" action="@Url.Action("Index", "Category")" class="mb-3">
+    <input type="text" name="search" placeholder="Tìm kiếm sản phẩm..." value="@ViewBag.CurrentSearch" />
+
+    <select name="categoryId">
+        <option value="">-- Tất cả danh mục --</option>
+        @foreach (var cat in ViewBag.Categories)
+        {
+            <option value="@cat.CategoryID" @(cat.CategoryID == ViewBag.CategoryID ? "selected" : "")>
+                @cat.CategoryName
+            </option>
+        }
+    </select>
+
+    <input type="number" name="minPrice" placeholder="Giá từ" value="@ViewBag.MinPrice" step="1000" />
+    <input type="number" name="maxPrice" placeholder="Đến" value="@ViewBag.MaxPrice" step="1000" />
+
+    <button type="submit">Lọc</button>
+</form>
+
+<!-- Danh sách sản phẩm -->
+@if (Model != null && Model.Any())
+{
+    <div class="product-grid">
+        @foreach (var p in Model)
+        {
+            var img = string.IsNullOrWhiteSpace(p.ProductImage)
+                ? Url.Content("~/Content/imgs/no-image.png")
+                : Url.Content(p.ProductImage);
+
+            <div class="product-card">
+                <a href="@Url.Action("Details", "Product", new { id = p.ProductID })">
+                    <img src="@img" alt="@p.ProductName" width="150" />
+                </a>
+                <h4>@p.ProductName</h4>
+                <p>@String.Format("{0:N0} ₫", p.ProductPrice)</p>
+                <div>
+                    <a href="@Url.Action("Details", "Product", new { id = p.ProductID })">Xem chi tiết</a> |
+                    <a href="@Url.Action("AddItem", "Cart", new { id = p.ProductID })">Mua ngay</a>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Phân trang -->
+    <div class="pagination-container">
+        @Html.PagedListPager(Model, page => Url.Action("Index", new
+        {
+            page,
+            search = ViewBag.CurrentSearch,
+            categoryId = ViewBag.CategoryID,
+            minPrice = ViewBag.MinPrice,
+            maxPrice = ViewBag.MaxPrice
+        }))
+    </div>
+}
+else
+{
+    <p>Không tìm thấy sản phẩm nào phù hợp.</p>
+}
