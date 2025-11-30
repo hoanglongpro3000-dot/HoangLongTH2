@@ -1,41 +1,177 @@
 ﻿@model HoangLongTH.Models.User
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Xóa người dùng";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Delete</h2>
-
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>User</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Password)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UserRole)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UserRole)
-        </dd>
-
-    </dl>
-
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+<style>
+    .delete-page {
+        background: #f5f7fb;
+        min-height: calc(100vh - 120px);
+        padding: 20px 0 40px;
     }
+
+    .delete-card {
+        border-radius: 16px;
+        border: none;
+        box-shadow: 0 8px 24px rgba(0,0,0,.12);
+        overflow: hidden;
+    }
+
+    .delete-header {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed, #db2777);
+        color: #fff;
+        padding: 18px 24px;
+        border-bottom: 3px solid rgba(255,255,255,0.6);
+    }
+
+        .delete-header h4 {
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: .3px;
+        }
+
+        .delete-header i {
+            margin-right: 8px;
+        }
+
+    .delete-warning {
+        background: rgba(248,113,113,0.12);
+        border-left: 5px solid #ef4444;
+        padding: 14px 16px;
+        border-radius: 8px;
+        color: #b91c1c;
+        font-weight: 600;
+        margin-bottom: 22px;
+    }
+
+        .delete-warning small {
+            font-weight: 500;
+        }
+
+    .info-label {
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 4px;
+        display: inline-block;
+    }
+
+    .value-box {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background: #f3f4f6;
+        border-radius: 10px;
+        color: #111827;
+        font-weight: 500;
+        font-size: 14px;
+        margin-top: 2px;
+    }
+
+        .value-box i {
+            font-size: 14px;
+        }
+
+    .value-box-admin {
+        background: #fce4ec;
+        color: #c2185b;
+    }
+
+    .value-box-user {
+        background: #e3f2fd;
+        color: #1e88e5;
+    }
+
+    .btn-delete-gradient {
+        background: linear-gradient(135deg, #f97373, #ef4444, #dc2626);
+        color: #fff;
+        border-radius: 10px;
+        padding: 9px 20px;
+        font-weight: 600;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: .22s;
+    }
+
+        .btn-delete-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(248,113,113,.45);
+            color: #fff;
+        }
+
+    .btn-back {
+        border-radius: 10px;
+        padding: 9px 18px;
+        font-weight: 600;
+    }
+</style>
+
+<div class="delete-page">
+    <div class="container-fluid">
+        <div class="card shadow-sm delete-card">
+            <!-- HEADER -->
+            <div class="delete-header">
+                <h4><i class="fas fa-user-slash"></i> Xác nhận xóa người dùng</h4>
+            </div>
+
+            <div class="card-body">
+                <!-- WARNING BOX -->
+                <div class="delete-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Bạn có chắc chắn muốn xóa người dùng này?
+                    <br />
+                    <small>Hành động này <strong>không thể hoàn tác</strong>. Vui lòng kiểm tra kỹ trước khi xóa.</small>
+                </div>
+
+                <!-- USER INFO -->
+                <div class="mb-3">
+                    <span class="info-label">Tên đăng nhập:</span><br />
+                    <span class="value-box">
+                        <i class="fas fa-user-circle"></i> @Model.Username
+                    </span>
+                </div>
+
+                <div class="mb-3">
+                    <span class="info-label">Mật khẩu:</span><br />
+                    <span class="value-box">
+                        <i class="fas fa-lock"></i> •••••••• (ẩn vì lý do bảo mật)
+                    </span>
+                </div>
+
+                <div class="mb-3">
+                    <span class="info-label">Vai trò:</span><br />
+                    @if (Model.UserRole?.Trim().ToLower() == "admin" || Model.UserRole == "A")
+                    {
+                        <span class="value-box value-box-admin">
+                            <i class="fas fa-user-shield"></i> Admin
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="value-box value-box-user">
+                            <i class="fas fa-user"></i> User
+                        </span>
+                    }
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="mt-4 text-right">
+                        <button type="submit" class="btn btn-delete-gradient">
+                            <i class="fas fa-trash-alt"></i> Xóa người dùng
+                        </button>
+                        <a href="@Url.Action("Index")" class="btn btn-secondary btn-back ml-2">
+                            <i class="fas fa-arrow-left"></i> Quay lại danh sách
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 </div>

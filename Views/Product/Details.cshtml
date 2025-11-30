@@ -158,36 +158,86 @@
             if (val > 1) input.value = val - 1;
         }
 
+        // =========================
+        // ADD TO CART (AJAX + chuyển sang giỏ)
+        // =========================
         function addToCart(productId) {
             const qty = parseInt(document.getElementById('pd-qty').value || '1', 10);
 
-            // Increment cart count immediately for smooth UX
-            if (window.CartManager) {
-                window.CartManager.increment(qty);
-            }
+            $.ajax({
+                url: '@Url.Action("AddItem", "Cart")',
+                type: 'GET',
+                data: { id: productId, quantity: qty },
+                success: function (res) {
+                    if (res && res.success) {
+                        // Update badge giỏ hàng nếu có
+                        if (window.CartManager) {
+                            if (window.CartManager.setCount && typeof res.count === 'number') {
+                                window.CartManager.setCount(res.count);
+                            } else {
+                                window.CartManager.increment(qty);
+                            }
+                        }
 
-            // Redirect to CartController/AddItem (sau 300ms để user thấy notification)
-            setTimeout(() => {
-                window.location.href = '@Url.Action("AddItem", "Cart")?id=' + productId + '&quantity=' + qty;
-            }, 300);
+                        // Chuyển sang trang giỏ hàng
+                        window.location.href = '@Url.Action("Index", "Cart")';
+                    } else {
+                        alert(res && res.message ? res.message : 'Thêm sản phẩm vào giỏ thất bại.');
+                    }
+                },
+                error: function (xhr) {
+                    if (xhr.status === 401) {
+                        if (confirm("Bạn cần đăng nhập để sử dụng giỏ hàng. Đăng nhập ngay?")) {
+                            window.location.href = '@Url.Action("Login", "Account")';
+                        }
+                    } else {
+                        alert('Có lỗi xảy ra khi thêm sản phẩm vào giỏ.');
+                    }
+                }
+            });
         }
 
+        // =========================
+        // BUY NOW (AJAX + redirect checkout)
+        // =========================
         function buyNow(productId) {
             const qty = parseInt(document.getElementById('pd-qty').value || '1', 10);
 
-            // Increment cart count
-            if (window.CartManager) {
-                window.CartManager.increment(qty);
-            }
+            $.ajax({
+                url: '@Url.Action("AddItem", "Cart")',
+                type: 'GET',
+                data: { id: productId, quantity: qty },
+                success: function (res) {
+                    if (res && res.success) {
+                        // Cập nhật badge nếu muốn
+                        if (window.CartManager) {
+                            if (window.CartManager.setCount && typeof res.count === 'number') {
+                                window.CartManager.setCount(res.count);
+                            } else {
+                                window.CartManager.increment(qty);
+                            }
+                        }
 
-            // Thêm vào giỏ rồi chuyển thẳng sang checkout
-            setTimeout(() => {
-                window.location.href = '@Url.Action("AddItem", "Cart")?id=' + productId + '&quantity=' + qty + '&redirect=checkout';
-            }, 300);
+                        // Chuyển sang trang thanh toán
+                        window.location.href = '@Url.Action("Checkout", "Order")';
+                    } else {
+                        alert(res && res.message ? res.message : 'Không thể mua ngay sản phẩm này.');
+                    }
+                },
+                error: function (xhr) {
+                    if (xhr.status === 401) {
+                        if (confirm("Bạn cần đăng nhập để mua hàng. Đăng nhập ngay?")) {
+                            window.location.href = '@Url.Action("Login", "Account")';
+                        }
+                    } else {
+                        alert('Có lỗi xảy ra khi xử lý mua ngay.');
+                    }
+                }
+            });
         }
 
-        // Prevent manual input in quantity field
-        document.getElementById('pd-qty').addEventListener('keydown', function(e) {
+        // Prevent manual typing
+        document.getElementById('pd-qty').addEventListener('keydown', function (e) {
             e.preventDefault();
         });
     </script>

@@ -1,4 +1,4 @@
-﻿
+﻿@* _AdminLayout.cshtml *@
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,38 +7,294 @@
     <title>@ViewBag.Title - Trang quản trị</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        /* Navbar moderne */
+        .navbar {
+            background: rgba(255, 255, 255, 0.98) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            padding: 8px 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .navbar-brand i {
+            margin-right: 10px;
+            font-size: 26px;
+        }
+
+        .navbar-nav {
+            gap: 5px;
+        }
+
+        .nav-link {
+            color: #4a5568 !important;
+            font-weight: 600;
+            padding: 12px 20px !important;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link i {
+            font-size: 16px;
+        }
+
+        .nav-link span {
+            display: inline-block;
+        }
+
+        .nav-link:before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+            border-radius: 3px;
+        }
+
+        .nav-link:hover {
+            color: #667eea !important;
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link:hover:before {
+            width: 80%;
+        }
+
+        .nav-link.active {
+            color: white !important;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Container principal */
+        .body-content {
+            background: white;
+            border-radius: 30px 30px 0 0;
+            margin-top: 30px;
+            padding: 40px;
+            min-height: calc(100vh - 180px);
+            box-shadow: 0 -10px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer moderne */
+        footer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 3px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        footer:before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, white, transparent);
+            /* animation ở đây nếu bạn muốn */
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        footer i {
+            margin: 0 5px;
+            color: #ffd700;
+        }
+
+        hr {
+            display: none;
+        }
+
+        /* Responsive */
+        media (max-width: 768px) {
+            .body-content {
+                padding: 20px;
+                margin-top: 20px;
+            }
+
+            .navbar-brand {
+                font-size: 20px;
+            }
+
+            .nav-link {
+                padding: 10px 15px !important;
+            }
+        }
+
+        .body-content {
+            /* có thể thêm animation nếu muốn */
+        }
+
+        /* Scrollbar personnalisée */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+    @{
+        // Lấy tên controller hiện tại để set class "active" cho menu
+        var currentController = ViewContext.RouteData.Values["controller"] as string;
+    }
+
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm">
         <div class="container">
-            @Html.ActionLink("Trang quản trị", "Index", "AdminHome", new { area = "Admin" }, new { @class = "navbar-brand" })
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+            @Html.ActionLink(
+                "Trang quản trị",
+                "Index",
+                "AdminHome",
+                new { area = "Admin" },
+                new { @class = "navbar-brand" }
+            )
+
+            <button type="button"
+                    class="navbar-toggler"
+                    data-bs-toggle="collapse"
+                    data-bs-target=".navbar-collapse"
+                    title="Toggle navigation"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Trang chủ", "Index", "AdminHome", new { area = "Admin" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Danh mục", "Index", "Categories", new { area = "Admin" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Sản phẩm", "Index", "Products", new { area = "Admin" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Khách hàng", "Index", "Customers", new { area = "Admin" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Tài khoản", "Index", "Users", new { area = "Admin" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Đơn hàng", "Index", "Orders", new { area = "Admin" }, new { @class = "nav-link" })</li>
+
+                    <li class="nav-item">
+                        <a href="@Url.Action("Index", "AdminHome", new { area = "Admin" })"
+                           class="nav-link @(currentController == "AdminHome" ? "active" : "")">
+                            <i class="fas fa-home"></i>
+                            <span>Trang chủ</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="@Url.Action("Index", "Categories", new { area = "Admin" })"
+                           class="nav-link @(currentController == "Categories" ? "active" : "")">
+                            <i class="fas fa-folder-open"></i>
+                            <span>Danh mục</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="@Url.Action("Index", "Products", new { area = "Admin" })"
+                           class="nav-link @(currentController == "Products" ? "active" : "")">
+                            <i class="fas fa-box-open"></i>
+                            <span>Sản phẩm</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="@Url.Action("Index", "Customers", new { area = "Admin" })"
+                           class="nav-link @(currentController == "Customers" ? "active" : "")">
+                            <i class="fas fa-users"></i>
+                            <span>Khách hàng</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="@Url.Action("Index", "Users", new { area = "Admin" })"
+                           class="nav-link @(currentController == "Users" ? "active" : "")">
+                            <i class="fas fa-user-gear"></i>
+                            <span>Tài khoản</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="@Url.Action("Index", "Orders", new { area = "Admin" })"
+                           class="nav-link @(currentController == "Orders" ? "active" : "")">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                            <span>Đơn hàng</span>
+                        </a>
+                    </li>
+
                 </ul>
             </div>
         </div>
     </nav>
+
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
     </div>
+
+    <footer>
+        <div class="container">
+            <p>
+                <i class="fas fa-copyright"></i> @DateTime.Now.Year - Hệ thống quản trị
+                <i class="fas fa-heart"></i>
+                Được phát triển với đam mê
+            </p>
+        </div>
+    </footer>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>
 </html>
-

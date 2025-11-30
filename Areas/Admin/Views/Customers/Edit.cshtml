@@ -1,73 +1,189 @@
 ﻿@model HoangLongTH.Models.Customer
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Chỉnh sửa khách hàng";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Edit</h2>
+<style>
+    .customer-edit-page {
+        background: #f5f7fb;
+        min-height: calc(100vh - 120px);
+        padding-top: 20px;
+        padding-bottom: 40px;
+    }
 
+    .customer-card,
+    .customer-sidebar {
+        border-radius: 14px;
+    }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Customer</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.CustomerID)
+        .customer-card .card-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #fff;
+            border-bottom: 3px solid #ffd700;
+        }
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.CustomerName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CustomerName, "", new { @class = "text-danger" })
+    .badge-soft-warning {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(255, 193, 7, 0.15);
+        color: #d39e00;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .form-label-strong {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+</style>
+
+<div class="customer-edit-page">
+    <div class="container-fluid">
+
+        <!-- HEADER -->
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <small class="text-muted">
+                    Trang quản trị / Khách hàng / <strong>Chỉnh sửa</strong>
+                </small>
+                <h3 class="mt-2 mb-1 text-primary">
+                    <i class="fas fa-user-edit"></i> Chỉnh Sửa Thông Tin Khách Hàng
+                </h3>
+                <p class="text-muted mb-0">
+                    Cập nhật thông tin liên hệ, địa chỉ và tài khoản liên kết của khách hàng.
+                </p>
+            </div>
+            <div class="col-md-4 text-md-right mt-3 mt-md-0">
+                <span class="badge-soft-warning">
+                    <i class="fas fa-id-badge"></i> Đang chỉnh sửa khách hàng #@Model.CustomerID
+                </span>
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.CustomerPhone, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CustomerPhone, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CustomerPhone, "", new { @class = "text-danger" })
+        <div class="row">
+            <!-- FORM CHÍNH -->
+            <div class="col-lg-8 mb-4">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.CustomerID)
+
+                    <div class="card shadow-sm customer-card">
+                        <div class="card-header">
+                            <strong>Thông Tin Khách Hàng</strong>
+                        </div>
+
+                        <div class="card-body">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+
+                            <!-- Tên khách hàng -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">
+                                    Họ tên khách hàng <span class="text-danger">*</span>
+                                </label>
+                                @Html.TextBoxFor(m => m.CustomerName,
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        placeholder = "Nhập họ tên khách hàng..."
+                                    })
+                                @Html.ValidationMessageFor(m => m.CustomerName, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- Số điện thoại -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">
+                                    Số điện thoại <span class="text-danger">*</span>
+                                </label>
+                                @Html.TextBoxFor(m => m.CustomerPhone,
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        placeholder = "Nhập số điện thoại..."
+                                    })
+                                @Html.ValidationMessageFor(m => m.CustomerPhone, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- Email -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">
+                                    Email
+                                </label>
+                                @Html.TextBoxFor(m => m.CustomerEmail,
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        type = "email",
+                                        placeholder = "Nhập email (nếu có)..."
+                                    })
+                                @Html.ValidationMessageFor(m => m.CustomerEmail, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- Địa chỉ -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">
+                                    Địa chỉ
+                                </label>
+                                @Html.TextAreaFor(m => m.CustomerAddress,
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        rows = 3,
+                                        placeholder = "Nhập địa chỉ giao hàng / liên hệ..."
+                                    })
+                                @Html.ValidationMessageFor(m => m.CustomerAddress, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- Username liên kết -->
+                            <div class="form-group mb-2">
+                                <label class="form-label-strong">
+                                    Tài khoản đăng nhập (Username)
+                                </label>
+                                @Html.DropDownList("Username", null, "-- Chọn tài khoản liên kết --",
+                                    new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
+                                <small class="text-muted">
+                                    Thay đổi username sẽ thay đổi tài khoản đăng nhập liên kết với khách hàng này.
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="card-footer text-right">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> Lưu thay đổi
+                            </button>
+                            <a href="@Url.Action("Index")" class="btn btn-secondary ml-2">
+                                <i class="fas fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- SIDEBAR: GỢI Ý / LƯU Ý -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm customer-sidebar">
+                    <div class="card-header bg-white border-0">
+                        <strong><i class="fas fa-lightbulb"></i> Lưu ý khi chỉnh sửa</strong>
+                    </div>
+                    <div class="card-body pt-0">
+                        <ul class="list-unstyled mb-3">
+                            <li>• Đảm bảo số điện thoại & email đúng để liên hệ khi có vấn đề về đơn hàng.</li>
+                            <li>• Khi đổi username, hãy chắc chắn rằng tài khoản đó thuộc về khách hàng này.</li>
+                            <li>• Địa chỉ nên chi tiết: số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố.</li>
+                        </ul>
+                        <p class="text-muted mb-0">
+                            Sau khi chỉnh sửa, thông tin mới sẽ áp dụng cho tất cả các đơn hàng tiếp theo của khách hàng.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.CustomerEmail, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CustomerEmail, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CustomerEmail, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CustomerAddress, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CustomerAddress, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CustomerAddress, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Username, "Username", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("Username", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {

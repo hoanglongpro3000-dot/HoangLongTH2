@@ -1,56 +1,492 @@
 ﻿@model HoangLongTH.Models.Customer
-
 @{
     ViewBag.Title = "Trang khách hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container mt-4">
-    <h2>Xin chào, @Model.CustomerName!</h2>
+<style>
+    @@keyframes gradient-shift {
+        0% {
+            background-position: 0% 50%;
+        }
 
-    <div class="card mt-3 p-3">
-        <h4>Thông tin cá nhân</h4>
-        <p><strong>Tài khoản:</strong> @Model.Username</p>
-        <p><strong>Email:</strong> @(string.IsNullOrEmpty(Model.CustomerEmail) ? "(chưa cập nhật)" : Model.CustomerEmail)</p>
-        <p><strong>Số điện thoại:</strong> @(string.IsNullOrEmpty(Model.CustomerPhone) ? "(chưa cập nhật)" : Model.CustomerPhone)</p>
-        <p><strong>Địa chỉ:</strong> @(string.IsNullOrEmpty(Model.CustomerAddress) ? "(chưa cập nhật)" : Model.CustomerAddress)</p>
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    @@keyframes float {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    @@keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @@keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @@keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    @@keyframes shimmer {
+        0% {
+            background-position: -1000px 0;
+        }
+
+        100% {
+            background-position: 1000px 0;
+        }
+    }
+
+    @@keyframes rotate {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    body {
+        background: linear-gradient(-45deg, #ee4d2d, #ff6b35, #f94c10, #ff8849);
+        background-size: 400% 400%;
+        animation: gradient-shift 15s ease infinite;
+        min-height: 100vh;
+    }
+
+    .profile-container {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 0 15px;
+    }
+
+    .welcome-header {
+        text-align: center;
+        margin-bottom: 40px;
+        animation: slideInUp 0.6s ease;
+    }
+
+        .welcome-header h2 {
+            color: #fff;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .welcome-header .avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #fff 0%, #ffe8e4 100%);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            animation: pulse 2s ease-in-out infinite;
+            border: 4px solid #fff;
+        }
+
+    .profile-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,.15);
+        padding: 30px;
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+        animation: slideInLeft 0.6s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient( 90deg, transparent, rgba(238, 77, 45, 0.1), transparent );
+            transition: left 0.5s;
+        }
+
+        .profile-card:hover::before {
+            left: 100%;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,.2);
+        }
+
+        .profile-card h4 {
+            color: #ee4d2d;
+            font-weight: 700;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .profile-card h4::before {
+                content: '';
+                width: 4px;
+                height: 24px;
+                background: linear-gradient(135deg, #ee4d2d 0%, #ff6b35 100%);
+                border-radius: 2px;
+            }
+
+    .info-row {
+        display: flex;
+        padding: 15px;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #fff5f3 0%, #ffe8e4 100%);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        border-left: 4px solid #ee4d2d;
+    }
+
+        .info-row:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(238, 77, 45, 0.2);
+        }
+
+        .info-row strong {
+            color: #ee4d2d;
+            min-width: 150px;
+            font-weight: 700;
+        }
+
+        .info-row span {
+            color: #333;
+            flex: 1;
+        }
+
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        animation: slideInRight 0.6s ease;
+        margin-bottom: 30px;
+    }
+
+    .btn-shopee {
+        background: linear-gradient(135deg, #ee4d2d 0%, #ff6b35 100%);
+        color: #fff;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(238, 77, 45, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-shopee::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-shopee:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-shopee:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(238, 77, 45, 0.5);
+            color: #fff;
+        }
+
+    .btn-outline-shopee {
+        background: #fff;
+        color: #ee4d2d;
+        border: 2px solid #ee4d2d;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
+    }
+
+        .btn-outline-shopee:hover {
+            background: linear-gradient(135deg, #ee4d2d 0%, #ff6b35 100%);
+            color: #fff;
+            border-color: #ee4d2d;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(238, 77, 45, 0.4);
+        }
+
+    .order-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,.15);
+        padding: 30px;
+        animation: slideInUp 0.8s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .order-card::after {
+            content: '🎁';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 3rem;
+            opacity: 0.1;
+            animation: rotate 20s linear infinite;
+        }
+
+    .table-shopee {
+        margin-top: 20px;
+    }
+
+        .table-shopee thead {
+            background: linear-gradient(135deg, #ee4d2d 0%, #ff6b35 100%);
+        }
+
+            .table-shopee thead th {
+                color: #fff;
+                font-weight: 700;
+                border: none;
+                padding: 15px;
+                white-space: nowrap;
+            }
+
+        .table-shopee tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+            .table-shopee tbody tr:hover {
+                background: linear-gradient(135deg, #fff5f3 0%, #ffe8e4 100%);
+                transform: scale(1.01);
+                box-shadow: 0 4px 12px rgba(238, 77, 45, 0.1);
+            }
+
+        .table-shopee tbody td {
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+    .order-id {
+        color: #ee4d2d;
+        font-weight: 700;
+    }
+
+    .status-badge {
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-block;
+    }
+
+    .status-paid {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: #fff;
+    }
+
+    .status-pending {
+        background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+        color: #000;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #999;
+    }
+
+        .empty-state .icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+    @@media (max-width: 768px) {
+        .welcome-header h2 {
+            font-size: 1.8rem;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .btn-shopee,
+        .btn-outline-shopee {
+            width: 100%;
+            text-align: center;
+        }
+
+        .info-row {
+            flex-direction: column;
+        }
+
+            .info-row strong {
+                margin-bottom: 5px;
+            }
+
+        .table-shopee {
+            font-size: 0.85rem;
+        }
+    }
+
+    /* Stagger animations */
+    .info-row:nth-child(1) {
+        animation: slideInLeft 0.4s ease 0.1s both;
+    }
+
+    .info-row:nth-child(2) {
+        animation: slideInLeft 0.4s ease 0.2s both;
+    }
+
+    .info-row:nth-child(3) {
+        animation: slideInLeft 0.4s ease 0.3s both;
+    }
+
+    .info-row:nth-child(4) {
+        animation: slideInLeft 0.4s ease 0.4s both;
+    }
+</style>
+
+<div class="profile-container">
+    <div class="welcome-header">
+        <div class="avatar">👤</div>
+        <h2>Xin chào, @Model.CustomerName! 🎉</h2>
     </div>
 
-    <div class="mt-4">
-        <a href="@Url.Action("Index", "Cart")" class="btn btn-outline-primary">
+    <div class="profile-card">
+        <h4>👤 Thông tin cá nhân</h4>
+        <div class="info-row">
+            <strong>🔑 Tài khoản:</strong>
+            <span>@Model.Username</span>
+        </div>
+        <div class="info-row">
+            <strong>📧 Email:</strong>
+            <span>@(string.IsNullOrEmpty(Model.CustomerEmail) ? "(chưa cập nhật)" : Model.CustomerEmail)</span>
+        </div>
+        <div class="info-row">
+            <strong>📱 Số điện thoại:</strong>
+            <span>@(string.IsNullOrEmpty(Model.CustomerPhone) ? "(chưa cập nhật)" : Model.CustomerPhone)</span>
+        </div>
+        <div class="info-row">
+            <strong>📍 Địa chỉ:</strong>
+            <span>@(string.IsNullOrEmpty(Model.CustomerAddress) ? "(chưa cập nhật)" : Model.CustomerAddress)</span>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <a href="@Url.Action("Index", "Cart")" class="btn btn-shopee">
             🛒 Xem giỏ hàng
         </a>
-        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
-            ⬅️ Về trang chủ
+        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-shopee">
+            🏠 Về trang chủ
         </a>
     </div>
 
     @if (Model.Order != null && Model.Order.Any())
     {
-        <div class="card mt-4 p-3">
-            <h4>Lịch sử đơn hàng gần đây</h4>
-            <table class="table table-sm">
-                <thead>
-                    <tr>
-                        <th>Mã đơn</th>
-                        <th>Ngày đặt</th>
-                        <th>Tổng tiền</th>
-                        <th>Trạng thái thanh toán</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var o in Model.Order.OrderByDescending(x => x.OrderDate).Take(5))
-                    {
+        <div class="order-card">
+            <h4>📦 Lịch sử đơn hàng gần đây</h4>
+            <div class="table-responsive">
+                <table class="table table-shopee">
+                    <thead>
                         <tr>
-                            <td>@o.OrderID</td>
-                            <td>@o.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>@String.Format("{0:N0} ₫", o.TotalAmount)</td>
-                            <td>@o.PaymentStatus</td>
+                            <th>Mã đơn</th>
+                            <th>Ngày đặt</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var o in Model.Order.OrderByDescending(x => x.OrderDate).Take(5))
+                        {
+                            <tr>
+                                <td><span class="order-id">#@o.OrderID</span></td>
+                                <td>@o.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td><strong style="color: #ee4d2d;">@String.Format("{0:N0} ₫", o.TotalAmount)</strong></td>
+                                <td>
+                                    <span class="status-badge @(o.PaymentStatus == "Đã thanh toán" ? "status-paid" : "status-pending")">
+                                        @o.PaymentStatus
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="order-card">
+            <div class="empty-state">
+                <div class="icon">📭</div>
+                <p>Bạn chưa có đơn hàng nào. Hãy bắt đầu mua sắm ngay!</p>
+            </div>
         </div>
     }
 </div>
-

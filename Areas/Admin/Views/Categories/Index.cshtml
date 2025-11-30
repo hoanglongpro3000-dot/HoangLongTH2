@@ -1,105 +1,422 @@
 ﻿@model IEnumerable<HoangLongTH.Models.Category>
-
 @{
     ViewBag.Title = "Quản lý danh mục";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
 <style>
-    .category-card {
-        background: #fff;
-        border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        padding: 25px;
+    :root {
+        --primary-blue: #0d6efd;
+        --primary-dark: #0052cc;
+        --success-green: #10b981;
+        --warning-orange: #f59e0b;
+        --danger-red: #ef4444;
+        --info-cyan: #06b6d4;
+        --light-bg: #f8fafc;
+        --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        --hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .page-wrapper {
+        padding: 30px 0;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 35px;
+        border-radius: 20px;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+    .page-header-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .page-header-left {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .page-header h2 {
+        color: white;
+        margin: 0;
+        font-weight: 700;
+        font-size: 2rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .page-header h2 i {
+            font-size: 1.8rem;
+        }
+
+    .page-header-sub {
+        color: #e5e7eb;
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    .page-header-right {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-end;
+    }
+
+        .page-header-right .top-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .page-header-right .search-form {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+    .page-header .btn-add {
+        background: white;
+        color: var(--primary-blue);
+        border: none;
+        padding: 12px 30px;
+        font-weight: 600;
         transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 999px;
+    }
+
+        .page-header .btn-add:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            background: #f8f9fa;
+        }
+
+    .search-input {
+        min-width: 240px;
+        border-radius: 999px;
+        border: none;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+
+    .btn-search {
+        border-radius: 999px;
+        border: none;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        background: white;
+        color: #374151;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .btn-search i {
+            font-size: 0.9rem;
+        }
+
+    .category-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: var(--card-shadow);
+        padding: 0;
+        overflow: hidden;
+        transition: all 0.4s ease;
     }
 
         .category-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            box-shadow: var(--hover-shadow);
         }
 
-    .page-header {
-        border-bottom: 3px solid #0d6efd;
-        padding-bottom: 10px;
-        margin-bottom: 25px;
+    .table-container {
+        padding: 30px;
     }
 
-    .table thead {
-        background: linear-gradient(90deg, #007bff, #0d6efd);
-        color: #fff;
-        border-radius: 10px 10px 0 0;
+    .table {
+        margin: 0;
+        border-collapse: separate;
+        border-spacing: 0;
     }
 
-    .table-hover tbody tr:hover {
-        background-color: rgba(13, 110, 253, 0.07);
-    }
-
-    .btn-custom {
-        border-radius: 8px;
-        transition: all 0.2s;
-        font-weight: 500;
-    }
-
-        .btn-custom:hover {
-            transform: scale(1.05);
+        .table thead {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
         }
 
-    .alert-custom {
-        background: #e9f5ff;
-        border: 1px solid #b6e0ff;
-        color: #0d6efd;
+            .table thead th {
+                color: white;
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: 0.85rem;
+                letter-spacing: 0.5px;
+                padding: 18px 15px;
+                border: none;
+                vertical-align: middle;
+            }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+            .table tbody tr:hover {
+                background: linear-gradient(90deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+                transform: scale(1.01);
+            }
+
+        .table tbody td {
+            padding: 20px 15px;
+            vertical-align: middle;
+            border: none;
+        }
+
+    .row-number {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.95rem;
+        box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+    }
+
+    .category-name {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #1e293b;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn-action-group {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .btn-action {
+        padding: 10px 18px;
         border-radius: 10px;
+        border: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-edit {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+    }
+
+    .btn-details {
+        background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+        color: white;
+    }
+
+    .btn-delete {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+    }
+
+    .stats-badge {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-block;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
     }
 </style>
 
-<div class="container mt-5">
-    <div class="page-header d-flex justify-content-between align-items-center">
-        <h2 class="text-primary fw-bold">
-            <i class="bi bi-tags-fill"></i> Quản lý danh mục sản phẩm
-        </h2>
-        @Html.ActionLink("➕ Thêm danh mục mới", "Create", null, new { @class = "btn btn-primary btn-lg text-white btn-custom shadow-sm" })
+<div class="container page-wrapper">
+    <div class="page-header">
+        <div class="page-header-content">
+            <div class="page-header-left">
+                <h2>
+                    <i class="fas fa-tags"></i> Quản lý danh mục sản phẩm
+                </h2>
+                <p class="page-header-sub">
+                    Thêm, chỉnh sửa, xóa và tìm kiếm danh mục sản phẩm trong hệ thống.
+                </p>
+
+                @if (Model != null && Model.Any())
+                {
+                    <span class="stats-badge mt-1">
+                        <i class="fas fa-check-circle me-1"></i> @Model.Count() danh mục
+                    </span>
+                }
+            </div>
+
+            <div class="page-header-right">
+                <div class="top-actions">
+                    @Html.ActionLink(
+                        "Thêm danh mục mới",
+                        "Create",
+                        null,
+                        new { @class = "btn btn-add btn-lg shadow-lg" }
+                    )
+                </div>
+
+                @using (Html.BeginForm("Index", "Categories", FormMethod.Get, new { area = "Admin", @class = "search-form" }))
+                {
+                    <input type="text"
+                           name="search"
+                           class="form-control search-input"
+                           placeholder="Tìm theo tên danh mục..."
+                           value="@(ViewBag.Search ?? "")" />
+                    <button type="submit" class="btn-search">
+                        <i class="fas fa-search"></i> Tìm kiếm
+                    </button>
+                }
+            </div>
+        </div>
     </div>
 
+    @* Thông báo *@
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger text-center fw-semibold shadow-sm mt-3"
+             style="border-radius: 12px; background: linear-gradient(135deg, #fee2e2, #fecaca); color: #b91c1c; padding: 15px;">
+            <i class="fas fa-exclamation-triangle me-2"></i> @TempData["ErrorMessage"]
+        </div>
+    }
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success text-center fw-semibold shadow-sm mt-3"
+             style="border-radius: 12px; background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #065f46; padding: 15px;">
+            <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+        </div>
+    }
+
     <div class="category-card">
-        @if (!Model.Any())
+        @if (Model == null || !Model.Any())
         {
-            <div class="alert alert-custom text-center fw-semibold">
-                ⚠️ Chưa có danh mục nào! Hãy thêm danh mục mới để bắt đầu.
+            <div class="alert-empty text-center py-5">
+                <i class="fas fa-box-open fa-3x mb-3 text-primary"></i>
+                <div>Chưa có danh mục nào!</div>
             </div>
         }
         else
         {
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered align-middle text-center">
-                    <thead>
-                        <tr>
-                            <th style="width:60px;">#</th>
-                            <th>Tên danh mục</th>
-                            <th style="width:220px;">Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @{
-                            int stt = 1;
-                            foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td class="fw-bold text-primary">@stt</td>
-                                    <td class="text-start ps-4 fw-semibold">@Html.DisplayFor(modelItem => item.CategoryName)</td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            @Html.ActionLink("✏️", "Edit", new { id = item.CategoryID }, new { @class = "btn btn-warning btn-sm text-white btn-custom" })
-                                            @Html.ActionLink("👁️", "Details", new { id = item.CategoryID }, new { @class = "btn btn-info btn-sm text-white btn-custom" })
-                                            @Html.ActionLink("🗑️", "Delete", new { id = item.CategoryID }, new { @class = "btn btn-danger btn-sm btn-custom", onclick = "return confirm('Bạn có chắc chắn muốn xóa danh mục này không?');" })
-                                        </div>
-                                    </td>
-                                </tr>
-                                stt++;
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th style="width:80px;">STT</th>
+                                <th class="text-start">Tên danh mục</th>
+                                <th style="width:300px;">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int stt = 1;
+                                foreach (var item in Model)
+                                {
+                                    var hasProducts = item.Product != null && item.Product.Any();
+                                    <tr>
+                                        <td class="text-center">
+                                            <span class="row-number">@stt</span>
+                                        </td>
+                                        <td>
+                                            <div class="category-name">
+                                                <i class="fas fa-folder"></i> @item.CategoryName
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="btn-action-group">
+                                                @Html.ActionLink(
+                                                    "Sửa",
+                                                    "Edit",
+                                                    new { id = item.CategoryID },
+                                                    new { @class = "btn btn-action btn-edit" }
+                                                )
+
+                                                @Html.ActionLink(
+                                                    "Chi tiết",
+                                                    "Details",
+                                                    new { id = item.CategoryID },
+                                                    new { @class = "btn btn-action btn-details" }
+                                                )
+
+                                                @if (hasProducts)
+                                                {
+                                                    <button class="btn btn-action btn-delete"
+                                                            style="opacity:0.6; cursor:not-allowed;"
+                                                            disabled
+                                                            title="Không thể xóa vì danh mục vẫn còn sản phẩm">
+                                                        <i class="fas fa-ban"></i> Xóa
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    @Html.ActionLink(
+                                                        "Xóa",
+                                                        "Delete",
+                                                        new { id = item.CategoryID },
+                                                        new
+                                                        {
+                                                            @class = "btn btn-action btn-delete",
+                                                            onclick = "return confirm('⚠️ Bạn có chắc chắn muốn xóa danh mục này không?');"
+                                                        }
+                                                    )
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    stt++;
+                                }
                             }
-                        }
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         }
     </div>

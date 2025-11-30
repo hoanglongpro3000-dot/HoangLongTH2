@@ -33,5 +33,20 @@
     <!-- Script tổng (nếu có) -->
     @Scripts.Render("~/bundles/app")     <!-- ví dụ: bundle cho ~/Scripts/script.js -->
     @RenderSection("scripts", required: false)  <!-- Cho phép thêm JS riêng theo trang -->
+    <script>
+    // Gọi API lấy số giỏ hàng
+    function updateCartCount() {
+        $.get('@Url.Action("GetCartCount", "Cart")', function (data) {
+            if (data && data.count !== undefined) {
+                $("#cart-count").text(data.count);
+            }
+        });
+    }
+
+    // Tự động cập nhật khi load bất kỳ trang nào
+    $(document).ready(function () {
+        updateCartCount();
+    });
+    </script>
 </body>
 </html>

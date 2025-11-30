@@ -1,73 +1,203 @@
 ﻿@model HoangLongTH.Models.Order
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Chỉnh sửa đơn hàng";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Edit</h2>
+<style>
+    .order-edit-page {
+        background: #f5f7fb;
+        min-height: calc(100vh - 120px);
+        padding-top: 20px;
+        padding-bottom: 40px;
+    }
 
+    .order-card,
+    .order-sidebar {
+        border-radius: 16px;
+    }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Order</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.OrderID)
+        .order-card .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border-bottom: 3px solid #ffd700;
+            border-radius: 14px 14px 0 0;
+        }
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.CustomerID, "CustomerID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("CustomerID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.CustomerID, "", new { @class = "text-danger" })
+    .badge-soft-warning {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(245, 158, 11, 0.12);
+        color: #d97706;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .form-label-strong {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .btn-save {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: #fff;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-weight: 600;
+        border: none;
+    }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16,185,129,0.3);
+        }
+
+    .btn-back {
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-weight: 600;
+    }
+</style>
+
+<div class="order-edit-page">
+    <div class="container-fluid">
+
+        <!-- HEADER -->
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <small class="text-muted">
+                    Trang quản trị / Đơn hàng / <strong>Chỉnh sửa</strong>
+                </small>
+                <h3 class="mt-2 mb-1 text-primary">
+                    <i class="fas fa-receipt"></i> Chỉnh Sửa Đơn Hàng
+                </h3>
+                <p class="text-muted mb-0">
+                    Chỉ cập nhật <strong>trạng thái thanh toán</strong> của đơn hàng.
+                    Các thông tin khác chỉ dùng để đối chiếu, không thể thay đổi.
+                </p>
+            </div>
+            <div class="col-md-4 text-md-right mt-3 mt-md-0">
+                <span class="badge-soft-warning">
+                    <i class="fas fa-file-invoice-dollar"></i> Đang chỉnh sửa đơn #@Model.OrderID
+                </span>
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
+        <div class="row">
+            <!-- FORM CHÍNH -->
+            <div class="col-lg-8 mb-4">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.OrderID)
+
+                    <div class="card shadow-sm order-card">
+                        <div class="card-header">
+                            <strong>Thông Tin Đơn Hàng</strong>
+                        </div>
+
+                        <div class="card-body">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+
+                            <!-- Khách hàng (chỉ xem) -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">
+                                    Khách hàng
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       value="@(Model.Customer != null ? Model.Customer.CustomerName : "Không có thông tin")"
+                                       disabled />
+                            </div>
+
+                            <!-- Ngày đặt (chỉ xem) -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">
+                                    Ngày đặt hàng
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       value="@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")"
+                                       disabled />
+                            </div>
+
+                            <!-- Tổng tiền (chỉ xem) -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">
+                                    Tổng tiền (VNĐ)
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       value="@String.Format("{0:N0}", Model.TotalAmount) + " ₫""
+                                       disabled />
+                            </div>
+
+                            <!-- Địa chỉ giao hàng (chỉ xem) -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">
+                                    Địa chỉ giao hàng
+                                </label>
+                                <textarea class="form-control"
+                                          rows="3"
+                                          disabled>@Model.AddressDelivery</textarea>
+                            </div>
+
+                            <!-- Trạng thái thanh toán (CHO PHÉP SỬA) -->
+                            <div class="form-group mb-2">
+                                <label class="form-label-strong">
+                                    Trạng thái thanh toán
+                                </label>
+                                @Html.DropDownListFor(
+                                    m => m.PaymentStatus,
+                                    new List<SelectListItem>
+                                    {
+                                        new SelectListItem { Text = "Đã thanh toán",   Value = "Đã thanh toán" },
+                                        new SelectListItem { Text = "Chờ xử lý",       Value = "Chờ xử lý" },
+                                        new SelectListItem { Text = "Chưa thanh toán", Value = "Chưa thanh toán" }
+                                    },
+                                    "-- Chọn trạng thái --",
+                                    new { @class = "form-control" }
+                                )
+                                @Html.ValidationMessageFor(m => m.PaymentStatus, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="card-footer text-right">
+                            <button type="submit" class="btn btn-save">
+                                <i class="fas fa-save"></i> Lưu thay đổi
+                            </button>
+                            <a href="@Url.Action("Index")" class="btn btn-secondary btn-back ml-2">
+                                <i class="fas fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- SIDEBAR: GỢI Ý / LƯU Ý -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm order-sidebar">
+                    <div class="card-header bg-white border-0">
+                        <strong><i class="fas fa-lightbulb"></i> Lưu ý khi chỉnh sửa</strong>
+                    </div>
+                    <div class="card-body pt-0">
+                        <ul class="list-unstyled mb-3">
+                            <li>• Không thể thay đổi khách hàng, ngày đặt, tổng tiền và địa chỉ giao hàng.</li>
+                            <li>• Chỉ cập nhật trạng thái: Đã thanh toán / Chưa thanh toán / Chờ xử lý.</li>
+                            <li>• Nên kiểm tra lại thông tin đơn hàng trước khi lưu.</li>
+                        </ul>
+                        <p class="text-muted mb-0">
+                            Sau khi lưu, trạng thái mới sẽ hiển thị trong trang
+                            <strong>Danh sách đơn hàng</strong>.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.TotalAmount, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TotalAmount, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.PaymentStatus, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PaymentStatus, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PaymentStatus, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.AddressDelivery, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.AddressDelivery, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.AddressDelivery, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {

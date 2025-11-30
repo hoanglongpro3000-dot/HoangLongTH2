@@ -1,73 +1,172 @@
 ﻿@model HoangLongTH.Models.Order
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Tạo đơn hàng";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Create</h2>
+<div class="form-wrapper mt-4">
+    <div class="form-header">
+        <h2><i class="fas fa-plus-circle"></i> Tạo đơn hàng mới</h2>
+        <p>Điền thông tin chi tiết cho đơn hàng</p>
+    </div>
 
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
 
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Order</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.CustomerID, "CustomerID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("CustomerID", null, htmlAttributes: new { @class = "form-control" })
+        <div class="form-container">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group-custom">
+                <label><i class="fas fa-user"></i> Khách hàng</label>
+                @Html.DropDownList("CustomerID", null, new { @class = "form-control fancy-input" })
                 @Html.ValidationMessageFor(model => model.CustomerID, "", new { @class = "text-danger" })
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="form-group-custom">
+                <label><i class="far fa-calendar-alt"></i> Ngày đặt</label>
+                @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control fancy-input" } })
                 @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.TotalAmount, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TotalAmount, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="form-group-custom">
+                <label><i class="fas fa-money-bill-wave"></i> Tổng tiền</label>
+                @Html.EditorFor(model => model.TotalAmount, new { htmlAttributes = new { @class = "form-control fancy-input" } })
                 @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.PaymentStatus, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PaymentStatus, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="form-group-custom">
+                <label><i class="fas fa-credit-card"></i> Trạng thái thanh toán</label>
+                @Html.EditorFor(model => model.PaymentStatus, new { htmlAttributes = new { @class = "form-control fancy-input" } })
                 @Html.ValidationMessageFor(model => model.PaymentStatus, "", new { @class = "text-danger" })
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.AddressDelivery, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.AddressDelivery, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="form-group-custom">
+                <label><i class="fas fa-map-marker-alt"></i> Địa chỉ giao hàng</label>
+                @Html.EditorFor(model => model.AddressDelivery, new { htmlAttributes = new { @class = "form-control fancy-input" } })
                 @Html.ValidationMessageFor(model => model.AddressDelivery, "", new { @class = "text-danger" })
             </div>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+            <div class="btn-group-actions">
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-check-circle"></i> Tạo đơn hàng
+                </button>
+
+                <a href="@Url.Action("Index")" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Quay lại
+                </a>
             </div>
         </div>
-    </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
+    }
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+<style>
+    .form-wrapper {
+        max-width: 700px;
+        margin: auto;
+        background: #ffffff;
+        border-radius: 18px;
+        padding: 25px 35px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+    .form-header {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+        .form-header h2 {
+            font-weight: 700;
+            font-size: 28px;
+            color: #4f46e5;
+        }
+
+        .form-header i {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            padding: 12px;
+            border-radius: 12px;
+            color: white;
+            margin-right: 8px;
+        }
+
+        .form-header p {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 8px;
+        }
+
+    .form-container {
+        margin-top: 20px;
+    }
+
+    .form-group-custom {
+        margin-bottom: 18px;
+    }
+
+        .form-group-custom label {
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #374151;
+        }
+
+    .fancy-input {
+        border-radius: 10px;
+        border: 1.8px solid #d1d5db;
+        padding: 10px 12px;
+        transition: all 0.25s ease;
+    }
+
+        .fancy-input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 8px rgba(99,102,241,0.35);
+        }
+
+    /* Buttons */
+    .btn-group-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 25px;
+    }
+
+    .btn-submit {
+        background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+        border: none;
+        padding: 12px 22px;
+        color: white;
+        font-size: 16px;
+        border-radius: 12px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: 0.3s;
+        flex: 1;
+    }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px rgba(34,197,94,0.3);
+        }
+
+    .btn-back {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        padding: 12px 18px;
+        color: white;
+        border-radius: 12px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.3s;
+        text-decoration: none;
+    }
+
+        .btn-back:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px rgba(37,99,235,0.3);
+        }
+</style>

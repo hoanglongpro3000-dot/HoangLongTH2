@@ -1,27 +1,149 @@
 ﻿@model HoangLongTH.Models.Category
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Chi tiết danh mục";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Details</h2>
+<div class="details-wrapper mt-4">
 
-<div>
-    <h4>Category</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.CategoryName)
-        </dt>
+    <div class="details-header">
+        <h2><i class="fas fa-info-circle"></i> Chi tiết danh mục</h2>
+        <p>Thông tin mô tả đầy đủ về danh mục sản phẩm</p>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.CategoryName)
-        </dd>
+    <div class="details-card shadow-lg">
+        <div class="details-section">
+            <label><i class="fas fa-tag"></i> Tên danh mục:</label>
+            <span>@Html.DisplayFor(m => m.CategoryName)</span>
+        </div>
+    </div>
 
-    </dl>
+    <div class="action-buttons">
+        <a href="@Url.Action("Edit", new { id = Model.CategoryID })" class="btn-edit">
+            <i class="fas fa-edit"></i> Chỉnh sửa
+        </a>
+
+        <a href="@Url.Action("Index")" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+    </div>
+
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.CategoryID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
+<style>
+    .details-wrapper {
+        max-width: 700px;
+        margin: auto;
+    }
+
+    /* Header */
+    .details-header {
+        text-align: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 35px 25px;
+        border-radius: 18px;
+        color: white;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        margin-bottom: 25px;
+    }
+
+        .details-header h2 {
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .details-header i {
+            margin-right: 8px;
+        }
+
+        .details-header p {
+            opacity: 0.9;
+            font-size: 14px;
+            margin: 0;
+        }
+
+    /* Card */
+    .details-card {
+        background: white;
+        border-radius: 18px;
+        padding: 30px;
+        border-left: 5px solid #667eea;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+    }
+
+    .details-section {
+        margin-bottom: 20px;
+    }
+
+        .details-section label {
+            font-weight: 600;
+            font-size: 16px;
+            color: #4f46e5;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .details-section i {
+            background: #e0e7ff;
+            color: #4f46e5;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .details-section span {
+            margin-left: 35px;
+            display: block;
+            font-size: 17px;
+            color: #374151;
+            font-weight: 500;
+            margin-top: 6px;
+        }
+
+    /* Buttons */
+    .action-buttons {
+        margin-top: 25px;
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn-edit {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        padding: 12px 22px;
+        color: white;
+        font-weight: 600;
+        font-size: 15px;
+        border-radius: 12px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.3s;
+    }
+
+        .btn-edit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(217,119,6,0.35);
+        }
+
+    .btn-back {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        padding: 12px 22px;
+        color: white;
+        font-weight: 600;
+        font-size: 15px;
+        border-radius: 12px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.3s;
+    }
+
+        .btn-back:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(37,99,235,0.35);
+        }
+</style>

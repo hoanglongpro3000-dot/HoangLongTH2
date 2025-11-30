@@ -1,0 +1,27 @@
+﻿@model IEnumerable<HoangLongTH.Models.Category>
+
+<div class="menu-item">
+    <!-- Click vào chữ Danh mục = xem tất cả sản phẩm -->
+    <a href="@Url.Action("Index", "Category")">
+        <i class="fas fa-th-large"></i> Sản phẩm
+        <i class="fas fa-chevron-down dropdown-icon"></i>
+    </a>
+
+    <!-- Menu xổ xuống khi hover -->
+    <div class="dropdown-menu">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var cat in Model)
+            {
+                <a href="@Url.Action("Index", "Category", new { categoryId = cat.CategoryID })">
+                    <i class="fas fa-circle"></i> @cat.CategoryName
+                </a>
+            }
+        }
+
+        <!-- Dòng cuối: xem tất cả sản phẩm, không lọc -->
+        <a href="@Url.Action("Index", "Category")"> 
+            <i class="fas fa-arrow-right"></i> Xem tất cả
+        </a>
+    </div>
+</div>

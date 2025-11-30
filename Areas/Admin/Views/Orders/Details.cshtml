@@ -1,59 +1,275 @@
 ﻿@model HoangLongTH.Models.Order
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Chi tiết đơn hàng";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Details</h2>
+<style>
+    .order-details-page {
+        background: #f5f7fb;
+        min-height: calc(100vh - 120px);
+        padding-top: 20px;
+        padding-bottom: 40px;
+    }
 
-<div>
-    <h4>Order</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.OrderDate)
-        </dt>
+    .order-card,
+    .order-sidebar {
+        border-radius: 16px;
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.OrderDate)
-        </dd>
+        .order-card .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border-bottom: 3px solid #ffd700;
+            border-radius: 14px 14px 0 0;
+        }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalAmount)
-        </dt>
+    .info-label {
+        font-weight: 700;
+        font-size: 15px;
+        color: #34495e;
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.TotalAmount)
-        </dd>
+    .info-value {
+        background: #f1f3f5;
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-weight: 600;
+        color: #111827;
+        display: inline-block;
+        margin-bottom: 12px;
+    }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.PaymentStatus)
-        </dt>
+    .amount-box {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        padding: 12px 18px;
+        color: white;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: 800;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.PaymentStatus)
-        </dd>
+    .badge-status {
+        padding: 10px 18px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 13px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        letter-spacing: 0.3px;
+    }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.AddressDelivery)
-        </dt>
+    .badge-paid {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.AddressDelivery)
-        </dd>
+    .badge-unpaid {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Customer.CustomerName)
-        </dt>
+    .badge-pending {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.Customer.CustomerName)
-        </dd>
+    .customer-pill {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+    }
 
-    </dl>
+        .customer-pill span.avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+    .btn-back,
+    .btn-edit {
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-weight: 600;
+    }
+
+    .btn-edit {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: #fff;
+        border: none;
+    }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+        }
+
+    .btn-back {
+        background: #6b7280;
+        color: #fff;
+    }
+
+        .btn-back:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+</style>
+
+<div class="order-details-page">
+    <div class="container-fluid">
+
+        <!-- HEADER -->
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <small class="text-muted">
+                    Trang quản trị / Đơn hàng / <strong>Chi tiết</strong>
+                </small>
+
+                <h3 class="mt-2 mb-1 text-primary">
+                    <i class="fas fa-receipt"></i> Chi Tiết Đơn Hàng
+                </h3>
+
+                <p class="text-muted mb-0">
+                    Xem đầy đủ thông tin đơn hàng, trạng thái thanh toán và khách hàng đặt mua.
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- THÔNG TIN ĐƠN HÀNG -->
+            <div class="col-lg-8 mb-4">
+                <div class="card shadow-sm order-card">
+                    <div class="card-header">
+                        <strong>Thông Tin Đơn Hàng #@Model.OrderID</strong>
+                    </div>
+
+                    <div class="card-body">
+
+                        <!-- Ngày đặt -->
+                        <div class="mb-3">
+                            <span class="info-label">Ngày đặt:</span><br />
+                            <span class="info-value">
+                                <i class="far fa-calendar-alt"></i>
+                                @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")
+                            </span>
+                        </div>
+
+                        <!-- Tổng tiền -->
+                        <div class="mb-3">
+                            <span class="info-label">Tổng tiền:</span><br />
+                            <span class="amount-box">
+                                <i class="fas fa-money-bill-wave"></i>
+                                @String.Format("{0:N0}", Model.TotalAmount) ₫
+                            </span>
+                        </div>
+
+                        <!-- Trạng thái thanh toán -->
+                        <div class="mb-3">
+                            <span class="info-label">Trạng thái thanh toán:</span><br />
+
+                            @{
+                                var status = Model.PaymentStatus ?? "";
+                            }
+
+                            @if (status == "Đã thanh toán" || status == "Paid")
+                            {
+                                <span class="badge-status badge-paid">
+                                    <i class="fas fa-check-circle"></i>
+                                    Đã thanh toán
+                                </span>
+                            }
+                            else if (status == "Chờ xử lý" || status == "Pending")
+                            {
+                                <span class="badge-status badge-pending">
+                                    <i class="fas fa-hourglass-half"></i>
+                                    Chờ xử lý
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge-status badge-unpaid">
+                                    <i class="fas fa-times-circle"></i>
+                                    Chưa thanh toán
+                                </span>
+                            }
+                        </div>
+
+                        <!-- Địa chỉ giao hàng -->
+                        <div class="mb-3">
+                            <span class="info-label">Địa chỉ giao hàng:</span><br />
+                            <span class="info-value" style="background:#fff; border:1px solid #e2e6ea;">
+                                <i class="fas fa-map-marker-alt"></i>
+                                @Model.AddressDelivery
+                            </span>
+                        </div>
+
+                        <!-- Khách hàng -->
+                        <div class="mb-3">
+                            <span class="info-label">Khách hàng:</span><br />
+                            @if (Model.Customer != null)
+                            {
+                                var name = Model.Customer.CustomerName ?? "";
+                                var firstChar = string.IsNullOrEmpty(name) ? "?" : name.Substring(0, 1).ToUpper();
+                                <span class="customer-pill">
+                                    <span class="avatar">@firstChar</span>
+                                    <span>@name</span>
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="info-value">
+                                    <i class="fas fa-user-slash"></i> Không có thông tin khách hàng
+                                </span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="card-footer text-right">
+                        <a href="@Url.Action("Edit", new { id = Model.OrderID })" class="btn btn-edit mr-2">
+                            <i class="fas fa-edit"></i> Chỉnh sửa
+                        </a>
+                        <a href="@Url.Action("Index")" class="btn btn-back">
+                            <i class="fas fa-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIDEBAR -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm order-sidebar">
+                    <div class="card-header bg-white border-0">
+                        <strong><i class="fas fa-info-circle"></i> Ghi chú</strong>
+                    </div>
+                    <div class="card-body pt-0">
+                        <p class="text-muted mb-2">
+                            • Kiểm tra trạng thái thanh toán trước khi chuyển đơn cho bên giao hàng.
+                        </p>
+                        <p class="text-muted mb-0">
+                            • Nếu khách hàng yêu cầu thay đổi địa chỉ, hãy chỉnh sửa đơn ngay tại đây để tránh giao nhầm.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.OrderID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

@@ -1,49 +1,220 @@
 ﻿@model HoangLongTH.Models.User
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Chỉnh sửa người dùng";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Edit</h2>
+<style>
+    .user-edit-page {
+        background: #f5f7fb;
+        min-height: calc(100vh - 120px);
+        padding: 25px 0 40px;
+    }
 
+    .user-card,
+    .user-sidebar {
+        border-radius: 16px;
+        border: none;
+        box-shadow: 0 8px 25px rgba(0,0,0,.12);
+        background: #ffffff;
+    }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>User</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Username)
+    .user-card-header {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed, #db2777);
+        color: #fff;
+        padding: 18px 22px;
+        font-weight: 700;
+        font-size: 18px;
+        letter-spacing: .3px;
+    }
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+    .badge-soft-warning {
+        display: inline-block;
+        padding: 7px 16px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #f97316, #ea580c);
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(234,88,12,.35);
+    }
+
+    .form-label-strong {
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #111827;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        padding: 10px 14px;
+        font-size: 15px;
+        transition: .25s;
+    }
+
+        .form-control:focus {
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124,58,237,.25);
+        }
+
+    .icon-circle-lg {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        font-size: 24px;
+        box-shadow: 0 6px 18px rgba(79,70,229,.35);
+        margin-bottom: 10px;
+    }
+
+    .btn-save-gradient {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        border: none;
+        color: #ffffff;
+        font-weight: 600;
+        padding: 9px 22px;
+        border-radius: 12px;
+        transition: .25s;
+    }
+
+        .btn-save-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(34,197,94,.35);
+        }
+
+    .btn-back {
+        border-radius: 12px;
+        padding: 9px 18px;
+        font-weight: 500;
+    }
+</style>
+
+<div class="user-edit-page">
+    <div class="container-fluid">
+
+        <!-- HEADER -->
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <small class="text-muted">
+                    Trang quản trị / Người dùng / <strong>Chỉnh sửa</strong>
+                </small>
+                <h3 class="mt-2 mb-1"
+                    style="background: linear-gradient(135deg,#4f46e5,#7c3aed,#db2777);
+                           -webkit-background-clip:text;
+                           -webkit-text-fill-color:transparent;
+                           font-weight:800;">
+                    <i class="fas fa-user-cog"></i> Chỉnh Sửa Người Dùng
+                </h3>
+                <p class="text-muted mb-0">
+                    Thay đổi mật khẩu hoặc vai trò của tài khoản trong hệ thống.
+                </p>
+            </div>
+            <div class="col-md-4 text-md-right mt-3 mt-md-0">
+                <span class="badge-soft-warning">
+                    <i class="fas fa-user-edit"></i> Đang chỉnh sửa: @Model.Username
+                </span>
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.UserRole, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UserRole, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.UserRole, "", new { @class = "text-danger" })
+        <div class="row">
+            <!-- FORM CHÍNH -->
+            <div class="col-lg-8 mb-4">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.Username)
+
+                    <div class="card user-card">
+                        <div class="user-card-header">
+                            <i class="fas fa-user"></i> Thông Tin Tài Khoản
+                        </div>
+
+                        <div class="card-body p-4">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+
+                            <!-- Username (readonly) -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">Tên đăng nhập</label>
+                                <input type="text"
+                                       class="form-control"
+                                       value="@Model.Username"
+                                       readonly />
+                                <small class="text-muted">Tên đăng nhập không thể thay đổi.</small>
+                            </div>
+
+                            <!-- Password -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">
+                                    Mật khẩu (nhập mới nếu muốn đổi)
+                                </label>
+                                @Html.EditorFor(model => model.Password,
+                                    new
+                                    {
+                                        htmlAttributes = new
+                                        {
+                                            @class = "form-control",
+                                            placeholder = "Nhập mật khẩu mới hoặc để trống nếu giữ nguyên"
+                                        }
+                                    })
+                                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- UserRole -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">
+                                    Vai trò
+                                </label>
+                                @Html.DropDownListFor(model => model.UserRole,
+                                    (IEnumerable<SelectListItem>)ViewBag.RoleList,
+                                    "— Chọn vai trò —",
+                                    new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.UserRole, "", new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+
+                        <div class="card-footer text-right bg-light">
+                            <button type="submit" class="btn-save-gradient">
+                                <i class="fas fa-save"></i> Lưu thay đổi
+                            </button>
+                            <a href="@Url.Action("Index")"
+                               class="btn btn-secondary btn-back ml-2">
+                                <i class="fas fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- SIDEBAR: GỢI Ý -->
+            <div class="col-lg-4">
+                <div class="card user-sidebar mb-3">
+                    <div class="card-header bg-white border-0" style="
+                        background: linear-gradient(135deg,#0ea5e9,#6366f1);
+                        color:#fff;">
+                        <strong><i class="fas fa-shield-alt"></i> Lưu ý phân quyền</strong>
+                    </div>
+                    <div class="card-body pt-3">
+                        <ul class="list-unstyled mb-2">
+                            <li>• Chỉ nên gán <strong>Admin</strong> cho người quản trị hệ thống.</li>
+                            <li>• Tài khoản <strong>User</strong> chỉ nên có quyền cơ bản.</li>
+                            <li>• Hạn chế chia sẻ tài khoản Admin cho nhiều người.</li>
+                        </ul>
+                        <p class="text-muted mb-0">
+                            Phân quyền đúng giúp hệ thống an toàn và dễ quản lý hơn.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {

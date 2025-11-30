@@ -11,7 +11,7 @@ namespace HoangLongTH.Controllers
 {
     public class CustomerController : Controller
     {
-        private MyStroreEntities db = new MyStroreEntities();
+        private MyStroreEntities1 db = new MyStroreEntities1();
 
         // GET: /Customer
         public ActionResult Index()

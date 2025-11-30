@@ -1,39 +1,221 @@
 ﻿@model HoangLongTH.Models.Category
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Tạo danh mục";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Create</h2>
+<style>
+    .category-create-page {
+        background: #eef1f7;
+        min-height: calc(100vh - 120px);
+        padding-top: 25px;
+        padding-bottom: 40px;
+    }
 
+    /* CARD CHÍNH */
+    .category-card {
+        border-radius: 18px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.10);
+        animation: fadeInUp 0.5s ease;
+    }
 
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Category</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.CategoryName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CategoryName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CategoryName, "", new { @class = "text-danger" })
+    .category-card .card-header {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed, #db2777);
+        padding: 18px 22px;
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: .3px;
+    }
+
+    /* SIDEBAR */
+    .category-sidebar {
+        border-radius: 18px;
+        border: none;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.10);
+        background: #ffffff;
+        animation: fadeInUp 0.7s ease;
+    }
+
+    .category-sidebar .card-header {
+        background: linear-gradient(135deg, #0ea5e9, #6366f1);
+        color: white;
+        font-weight: 700;
+        padding: 15px 20px;
+    }
+
+    .badge-soft-primary {
+        display: inline-block;
+        padding: 7px 16px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #38bdf8, #6366f1);
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(99,102,241,.35);
+    }
+
+    .category-sidebar ul li {
+        margin-bottom: 6px;
+        line-height: 1.4;
+    }
+
+    /* INPUT ĐẸP HƠN */
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        padding: 10px 14px;
+        font-size: 15px;
+        transition: .3s;
+    }
+
+    .form-control:focus {
+        border-color: #7c3aed;
+        box-shadow: 0 0 0 3px rgba(124,58,237,.25);
+    }
+
+    /* NÚT */
+    .btn-gradient-save {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 10px 22px;
+        border-radius: 12px;
+        transition: .25s;
+    }
+
+    .btn-gradient-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(34,197,94,.35);
+    }
+
+    .btn-back {
+        padding: 10px 18px;
+        border-radius: 12px;
+        font-weight: 500;
+    }
+
+    keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<div class="category-create-page">
+    <div class="container-fluid">
+
+        <!-- BREADCRUMB + TIÊU ĐỀ -->
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <small class="text-muted">
+                    Trang quản trị / Danh mục / <strong>Tạo mới</strong>
+                </small>
+                <h3 class="mt-2 mb-1" style="
+                    background: linear-gradient(135deg, #4f46e5, #7c3aed, #db2777);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    font-weight: 800;">
+                    <i class="fas fa-plus-circle"></i> Tạo Danh Mục Mới
+                </h3>
+                <p class="text-muted mb-0">
+                    Thêm danh mục để nhóm các sản phẩm lại với nhau.
+                    Đặt tên ngắn gọn, dễ hiểu để dễ quản lý.
+                </p>
+            </div>
+            <div class="col-md-4 text-md-right mt-3 mt-md-0">
+                <span class="badge-soft-primary">
+                    <i class="fas fa-folder-open"></i> Quản lý danh mục
+                </span>
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+        <div class="row">
+            <!-- FORM CHÍNH -->
+            <div class="col-lg-8 mb-4">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="card category-card">
+                        <div class="card-header text-white">
+                            <strong>Thông Tin Danh Mục</strong>
+                        </div>
+
+                        <div class="card-body">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+
+                            <div class="form-group">
+                                <label class="font-weight-bold">
+                                    Tên danh mục <span class="text-danger">*</span>
+                                </label>
+                                @Html.EditorFor(model => model.CategoryName,
+                                    new
+                                    {
+                                        htmlAttributes = new
+                                        {
+                                            @class = "form-control",
+                                            placeholder = "Ví dụ: Điện thoại, Laptop, Phụ kiện..."
+                                        }
+                                    })
+                                <small class="form-text text-muted">
+                                    Tên sẽ hiển thị cho khách hàng khi họ xem danh sách sản phẩm.
+                                </small>
+                                @Html.ValidationMessageFor(model => model.CategoryName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="card-footer text-right">
+                            <button type="submit" class="btn-gradient-save">
+                                <i class="fas fa-save"></i> Lưu danh mục
+                            </button>
+                            <a href="@Url.Action("Index")" class="btn btn-secondary btn-back ml-2">
+                                <i class="fas fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- CỘT BÊN PHẢI: HƯỚNG DẪN / GỢI Ý -->
+            <div class="col-lg-4">
+                <div class="card category-sidebar">
+                    <div class="card-header">
+                        <strong><i class="fas fa-lightbulb"></i> Gợi ý đặt tên</strong>
+                    </div>
+                    <div class="card-body pt-3">
+                        <ul class="list-unstyled mb-3">
+                            <li>
+                                • Dùng danh mục theo <strong>loại sản phẩm</strong>:
+                                “Điện thoại”, “Laptop”, “Tai nghe”…
+                            </li>
+                            <li>• Không nên quá dài, tránh dùng ký tự đặc biệt.</li>
+                            <li>• Có thể tách nhỏ: “Điện thoại Android”, “Điện thoại iPhone”…</li>
+                        </ul>
+
+                        <div class="alert alert-info mb-3">
+                            <i class="fas fa-info-circle"></i>
+                            <span class="ml-1">
+                                Bạn có thể chỉnh sửa hoặc xóa danh mục bất cứ lúc nào ở
+                                trang <strong>Danh sách danh mục</strong>.
+                            </span>
+                        </div>
+
+                        <p class="mb-1 text-muted">
+                            Mẹo nhỏ:
+                        </p>
+                        <p class="mb-0 text-muted">
+                            Hãy đặt tên giống như khách hàng thường tìm kiếm
+                            (ví dụ: “Điện thoại iPhone”, “Phụ kiện gaming”…) để tối ưu trải nghiệm người dùng.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
+
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {

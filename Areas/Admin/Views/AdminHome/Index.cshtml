@@ -1,8 +1,648 @@
-﻿
-@{
-    ViewBag.Title = "Index";
+﻿@{
+    ViewBag.Title = "Trang quản trị";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Index</h2>
+<style>
+    .admin-dashboard-page {
+        background: #f5f7fb;
+        min-height: calc(100vh - 70px);
+        padding: 24px 0 32px;
+    }
 
+    .admin-dashboard-header {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 16px;
+        padding: 20px 24px;
+        color: #fff;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        margin-bottom: 24px;
+        position: relative;
+        overflow: hidden;
+        animation: slideDown 0.6s ease-out;
+    }
+
+        .admin-dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        .admin-dashboard-header h2 {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0 0 4px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .admin-dashboard-header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
+        }
+
+    @@keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes shine {
+        0% {
+            transform: translateX(-100%) translateY(-100%) rotate(45deg);
+        }
+
+        100% {
+            transform: translateX(100%) translateY(100%) rotate(45deg);
+        }
+    }
+
+    .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+    }
+
+    .stat-card {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        border: 1px solid #e2e8f0;
+        transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+        animation: fadeInUp 0.6s ease-out forwards;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .stat-card:hover::before {
+            left: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+            border-color: #cbd5e0;
+        }
+
+        .stat-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .stat-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .stat-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .stat-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .stat-card:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .stat-card:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+
+        .stat-card:nth-child(7) {
+            animation-delay: 0.7s;
+        }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .stat-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .stat-label {
+        font-size: 14px;
+        color: #718096;
+        font-weight: 500;
+        transition: color 0.3s;
+    }
+
+    .stat-card:hover .stat-label {
+        color: #4a5568;
+    }
+
+    .stat-value {
+        font-size: 24px;
+        font-weight: 800;
+        color: #2d3748;
+        transition: transform 0.3s;
+    }
+
+    .stat-card:hover .stat-value {
+        transform: scale(1.1);
+    }
+
+    .stat-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 20px;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        position: relative;
+    }
+
+    .stat-card:hover .stat-icon {
+        transform: rotate(360deg) scale(1.15);
+        box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+
+    .stat-icon::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: inherit;
+        opacity: 0;
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+            opacity: 0.5;
+        }
+
+        50% {
+            transform: scale(1.3);
+            opacity: 0;
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 0;
+        }
+    }
+
+    .customers {
+        background: linear-gradient(135deg, #4299e1, #3182ce);
+    }
+
+    .orders {
+        background: linear-gradient(135deg, #48bb78, #38a169);
+    }
+
+    .products {
+        background: linear-gradient(135deg, #ed8936, #dd6b20);
+    }
+
+    .categories {
+        background: linear-gradient(135deg, #9f7aea, #805ad5);
+    }
+
+    .admins {
+        background: linear-gradient(135deg, #e53e3e, #c53030);
+    }
+
+    .pending {
+        background: linear-gradient(135deg, #d69e2e, #b7791f);
+    }
+
+    .completed {
+        background: linear-gradient(135deg, #38a169, #2f855a);
+    }
+
+    .admin-dashboard-footer {
+        margin-top: 24px;
+        font-size: 13px;
+        color: #a0aec0;
+        text-align: right;
+        animation: fadeIn 1s ease-out 0.8s both;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Additional Stats Section */
+    .additional-stats {
+        margin-top: 24px;
+        animation: fadeInUp 0.6s ease-out 0.8s both;
+    }
+
+    .chart-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 16px;
+    }
+
+    .chart-card {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+
+        .chart-card:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+    .chart-header {
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #f7fafc;
+    }
+
+        .chart-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 0;
+        }
+
+    /* Activity List */
+    .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+        .activity-item:hover {
+            background: #f7fafc;
+            transform: translateX(4px);
+        }
+
+    .activity-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+        .activity-icon.new-order {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+
+        .activity-icon.new-user {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+        }
+
+        .activity-icon.completed {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+        }
+
+        .activity-icon.new-product {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+        }
+
+    .activity-content {
+        flex: 1;
+    }
+
+    .activity-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 2px;
+    }
+
+    .activity-time {
+        font-size: 12px;
+        color: #a0aec0;
+    }
+
+    /* Goals List */
+    .goals-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .goal-item {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .goal-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .goal-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #4a5568;
+    }
+
+    .goal-progress-text {
+        font-size: 13px;
+        font-weight: 700;
+        color: #2d3748;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e2e8f0;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #48bb78, #38a169);
+        border-radius: 10px;
+        transition: width 1s ease-out;
+        animation: progressAnimation 1.5s ease-out;
+    }
+
+    @@keyframes progressAnimation {
+        from {
+            width: 0;
+        }
+    }
+
+    /* Hiệu ứng số đếm */
+    .stat-value {
+        display: inline-block;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .stat-grid {
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+        }
+
+        .stat-card {
+            padding: 14px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+        }
+
+        .stat-icon {
+            width: 38px;
+            height: 38px;
+            font-size: 18px;
+        }
+
+        .chart-section {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="admin-dashboard-page">
+    <div class="container-fluid">
+
+        <!-- Header -->
+        <div class="admin-dashboard-header">
+            <h2>📊 Thống kê tổng quan</h2>
+            <p>Hiển thị các số liệu đơn giản của hệ thống.</p>
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="stat-grid">
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <div class="stat-label">Số khách hàng</div>
+                    <div class="stat-value" data-value="@ViewBag.TotalCustomers">@ViewBag.TotalCustomers</div>
+                </div>
+                <div class="stat-icon customers"><i class="fas fa-users"></i></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <div class="stat-label">Số đơn hàng</div>
+                    <div class="stat-value" data-value="@ViewBag.TotalOrders">@ViewBag.TotalOrders</div>
+                </div>
+                <div class="stat-icon orders"><i class="fas fa-shopping-cart"></i></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <div class="stat-label">Số sản phẩm</div>
+                    <div class="stat-value" data-value="@ViewBag.TotalProducts">@ViewBag.TotalProducts</div>
+                </div>
+                <div class="stat-icon products"><i class="fas fa-box"></i></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <div class="stat-label">Số danh mục</div>
+                    <div class="stat-value" data-value="@ViewBag.TotalCategories">@ViewBag.TotalCategories</div>
+                </div>
+                <div class="stat-icon categories"><i class="fas fa-layer-group"></i></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <div class="stat-label">Tài khoản Admin</div>
+                    <div class="stat-value" data-value="@ViewBag.TotalAdmins">@ViewBag.TotalAdmins</div>
+                </div>
+                <div class="stat-icon admins"><i class="fas fa-user-shield"></i></div>
+            </div>
+
+            @*<div class="stat-card">
+                <div class="stat-info">
+                    <div class="stat-label">Đơn hàng chờ xử lý</div>
+                    <div class="stat-value" data-value="@ViewBag.PendingOrders">@ViewBag.PendingOrders</div>
+                </div>
+                <div class="stat-icon pending"><i class="fas fa-hourglass-half"></i></div>
+            </div>*@
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <div class="stat-label">Đơn hàng đã đặt</div>
+                    <div class="stat-value" data-value="@ViewBag.CompletedOrders">@ViewBag.CompletedOrders</div>
+                </div>
+                <div class="stat-icon completed"><i class="fas fa-check-circle"></i></div>
+            </div>
+
+        </div>
+
+        <!-- Phần thống kê bổ sung -->
+        <div class="additional-stats">
+            <div class="chart-section">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>📈 Hoạt động gần đây</h3>
+                    </div>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon new-order"><i class="fas fa-shopping-bag"></i></div>
+                            <div class="activity-content">
+                                <div class="activity-title">Đơn hàng mới</div>
+                                <div class="activity-time">5 phút trước</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon new-user"><i class="fas fa-user-plus"></i></div>
+                            <div class="activity-content">
+                                <div class="activity-title">Khách hàng mới đăng ký</div>
+                                <div class="activity-time">15 phút trước</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon completed"><i class="fas fa-check-double"></i></div>
+                            <div class="activity-content">
+                                <div class="activity-title">Đơn hàng hoàn thành</div>
+                                <div class="activity-time">1 giờ trước</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon new-product"><i class="fas fa-box-open"></i></div>
+                            <div class="activity-content">
+                                <div class="activity-title">Thêm sản phẩm mới</div>
+                                <div class="activity-time">2 giờ trước</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>🎯 Mục tiêu tháng này</h3>
+                    </div>
+                    <div class="goals-list">
+                        <div class="goal-item">
+                            <div class="goal-info">
+                                <span class="goal-label">Đơn hàng</span>
+                                <span class="goal-progress-text">11 / 50</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 22%"></div>
+                            </div>
+                        </div>
+                        <div class="goal-item">
+                            <div class="goal-info">
+                                <span class="goal-label">Khách hàng mới</span>
+                                <span class="goal-progress-text">4 / 20</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 20%; background: linear-gradient(90deg, #4299e1, #3182ce);"></div>
+                            </div>
+                        </div>
+                        <div class="goal-item">
+                            <div class="goal-info">
+                                <span class="goal-label">Doanh thu</span>
+                                <span class="goal-progress-text">65%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 65%; background: linear-gradient(90deg, #9f7aea, #805ad5);"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-dashboard-footer">
+            ⏰ Cập nhật lúc: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+        </div>
+
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+<script>
+    // Hiệu ứng đếm số khi trang load
+    document.addEventListener('DOMContentLoaded', function () {
+        const statValues = document.querySelectorAll('.stat-value');
+
+        statValues.forEach((stat, index) => {
+            const finalValue = parseInt(stat.textContent) || 0;
+            const duration = 1500;
+            const startDelay = index * 100;
+
+            setTimeout(() => {
+                let startValue = 0;
+                const increment = finalValue / (duration / 16);
+
+                const counter = setInterval(() => {
+                    startValue += increment;
+                    if (startValue >= finalValue) {
+                        stat.textContent = finalValue;
+                        clearInterval(counter);
+                    } else {
+                        stat.textContent = Math.floor(startValue);
+                    }
+                }, 16);
+            }, startDelay);
+        });
+    });
+</script>

@@ -13,7 +13,7 @@ namespace HoangLongTH.Areas.Admin.Controllers
 {
     public class ProductsController : Controller
     {
-        private MyStroreEntities db = new MyStroreEntities();
+        private MyStroreEntities1 db = new MyStroreEntities1();
 
         // GET: Admin/Products
         public ActionResult Index(string SearchString)
@@ -54,29 +54,30 @@ namespace HoangLongTH.Areas.Admin.Controllers
         }
 
         // POST: Admin/Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProductID,CategoryID,ProductName,ProductDecription,ProductPrice,ProductImage")] Product product)
+        public ActionResult Create([Bind(Include = "ProductID,CategoryID,ProductName,ProductDecription,ProductPrice,ProductImage,Quantity")] Product product)
         {
             // Chuẩn hóa đầu vào (tránh null/space)
             product.ProductName = product.ProductName?.Trim();
             product.ProductDecription = product.ProductDecription?.Trim();
             product.ProductImage = string.IsNullOrWhiteSpace(product.ProductImage)
-                                        ? "/Content/imgs/no-image.png"  // ✅ ảnh mặc định nếu cột không cho NULL
+                                        ? "/Content/imgs/no-image.png"  // ảnh mặc định
                                         : product.ProductImage.Trim();
 
             // Kiểm tra danh mục tồn tại
             if (!db.Category.Any(c => c.CategoryID == product.CategoryID))
                 ModelState.AddModelError("CategoryID", "Vui lòng chọn danh mục hợp lệ.");
 
-            // Ràng buộc cơ bản (tùy schema DB, điều chỉnh thêm nếu cần)
+            // Ràng buộc cơ bản
             if (string.IsNullOrWhiteSpace(product.ProductName))
                 ModelState.AddModelError("ProductName", "Tên sản phẩm là bắt buộc.");
 
             if (product.ProductPrice <= 0)
                 ModelState.AddModelError("ProductPrice", "Giá phải lớn hơn 0.");
+
+            if (product.Quantity < 0)
+                ModelState.AddModelError("Quantity", "Số lượng không được âm.");
 
             if (!ModelState.IsValid)
             {
@@ -86,7 +87,7 @@ namespace HoangLongTH.Areas.Admin.Controllers
 
             try
             {
-                db.Product.Add(product);              // hoặc db.Set<Product>().Add(product)
+                db.Product.Add(product);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -129,12 +130,13 @@ namespace HoangLongTH.Areas.Admin.Controllers
         }
 
         // POST: Admin/Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProductID,CategoryID,ProductName,ProductDecription,ProductPrice,ProductImage")] Product product)
+        public ActionResult Edit([Bind(Include = "ProductID,CategoryID,ProductName,ProductDecription,ProductPrice,ProductImage,Quantity")] Product product)
         {
+            if (product.Quantity < 0)
+                ModelState.AddModelError("Quantity", "Số lượng không được âm.");
+
             if (ModelState.IsValid)
             {
                 db.Entry(product).State = EntityState.Modified;

@@ -6,172 +6,375 @@
 }
 
 <style>
-    /* ================== Tổng thể ================== */
-    body {
-        background-color: #f4f6fb;
+    /* ================== Background ================== */
+    .page-wrapper {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 40px 0;
     }
 
-    .page-header {
-        border-left: 6px solid #0d6efd;
-        padding-left: 15px;
+    /* ================== Header Card ================== */
+    .page-header-card {
+        background: white;
+        padding: 30px 35px;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
         margin-bottom: 30px;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        position: relative;
+        overflow: hidden;
     }
 
-        .page-header h2 {
-            font-weight: 700;
-            color: #0d6efd;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        }
+    .page-header-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 6px;
+        height: 100%;
+        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    }
 
+    .page-header-card h2 {
+        font-weight: 800;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0;
+        font-size: 32px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .page-header-card h2 i {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 36px;
+    }
+
+    /* ================== Buttons ================== */
     .btn-add {
-        background: linear-gradient(90deg, #007bff, #00aaff);
-        color: #fff !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white !important;
         border: none;
-        border-radius: 10px;
-        padding: 10px 20px;
-        font-weight: 600;
+        border-radius: 12px;
+        padding: 14px 28px;
+        font-weight: 700;
+        font-size: 15px;
         transition: all 0.3s ease;
-        box-shadow: 0 3px 10px rgba(0,123,255,0.3);
-    }
-
-        .btn-add:hover {
-            transform: translateY(-2px);
-            background: linear-gradient(90deg, #0056b3, #0099dd);
-            box-shadow: 0 4px 12px rgba(0,123,255,0.4);
-        }
-
-    /* ================== Bảng ================== */
-    .customer-card {
-        background-color: #fff;
-        border-radius: 15px;
-        padding: 25px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        transition: all 0.3s ease;
-    }
-
-        .customer-card:hover {
-            transform: translateY(-3px);
-        }
-
-    .table thead {
-        background: linear-gradient(90deg, #007bff, #00aaff);
-        color: #fff;
-        font-weight: 600;
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        text-transform: uppercase;
         letter-spacing: 0.5px;
     }
 
-    .table-hover tbody tr:hover {
-        background-color: rgba(13,110,253,0.08);
-        transition: background 0.2s ease;
+    .btn-add:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
     }
 
-    .table td, .table th {
-        vertical-align: middle !important;
+    .btn-add i {
+        margin-right: 8px;
+        font-size: 18px;
     }
 
-        .table td:first-child {
-            font-weight: 600;
-        }
-
-    .badge-password {
-        background: linear-gradient(45deg, #6c757d, #adb5bd);
-        color: #fff;
-        border-radius: 8px;
-        padding: 6px 10px;
-        font-size: 0.9rem;
-        box-shadow: inset 0 1px 3px rgba(255,255,255,0.2);
+    /* ================== Customer Card ================== */
+    .customer-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        animation: fadeInUp 0.6s ease;
     }
 
-    /* ================== Nút hành động ================== */
-    .btn-action {
-        border-radius: 8px;
-        padding: 6px 10px;
+   keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+    /* ================== Table Styling ================== */
+    .table {
+        margin: 0;
+    }
+
+    .table thead {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .table thead th {
+        font-weight: 700;
+        padding: 20px 15px;
+        border: none;
+        font-size: 15px;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+    }
+
+    .table tbody td {
+        padding: 22px 15px;
+        vertical-align: middle;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 14.5px;
+    }
+
+    .table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+        background: linear-gradient(90deg, #f8f9ff 0%, #f3f4ff 100%);
+        transform: translateX(5px);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+    }
+
+    .table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* ================== Customer Info Styling ================== */
+    .customer-name {
+        font-weight: 700;
+        color: #2c3e50;
+        font-size: 15px;
+    }
+
+    .customer-phone {
+        color: #667eea;
         font-weight: 600;
-        color: #fff !important;
-        transition: all 0.2s ease;
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        gap: 4px;
+        gap: 6px;
     }
 
-        .btn-action:hover {
-            transform: scale(1.07);
-            opacity: 0.9;
-        }
+    .customer-phone i {
+        font-size: 16px;
+    }
 
-    .btn-warning {
-        background: #ffc107 !important;
+    .customer-email {
+        color: #764ba2;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .customer-email i {
+        font-size: 16px;
+    }
+
+    .customer-address {
+        color: #7f8c8d;
+        font-style: italic;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .customer-address i {
+        font-size: 16px;
+        color: #95a5a6;
+    }
+
+    /* ================== Password Badge ================== */
+    .badge-password {
+        background: linear-gradient(135deg, #a8a8a8 0%, #6c757d 100%);
+        color: white;
+        border-radius: 10px;
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 3px 10px rgba(108, 117, 125, 0.3);
+    }
+
+    .badge-password i {
+        font-size: 16px;
+    }
+
+    /* ================== Action Buttons ================== */
+    .btn-action {
+        border-radius: 10px;
+        padding: 10px 16px;
+        font-weight: 600;
+        color: white !important;
+        border: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
     }
 
     .btn-info {
-        background: #17a2b8 !important;
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
     }
 
-    .btn-danger {
-        background: #dc3545 !important;
+    /* ================== Footer Stats ================== */
+    .card-footer-stats {
+        background: linear-gradient(90deg, #f8f9ff 0%, #f3f4ff 100%);
+        padding: 20px 35px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 2px solid #e8ebff;
     }
 
-    /* ================== Hiệu ứng bảng & icon ================== */
-    .table-icon {
-        font-size: 1.1rem;
+    .stats-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
     }
 
-    .card-footer {
-        border-top: 1px solid #eaeaea;
-        text-align: right;
-        font-style: italic;
-        color: #6c757d;
-        margin-top: 10px;
+    .stats-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .stats-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stats-label {
+        font-size: 13px;
+        color: #7f8c8d;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .stats-value {
+        font-size: 26px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* ================== Empty State ================== */
+    .empty-state {
+        padding: 80px 20px;
+        text-align: center;
+    }
+
+    .empty-state i {
+        font-size: 100px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+        opacity: 0.3;
+    }
+
+    .empty-state p {
+        color: #7f8c8d;
+        font-size: 20px;
+        font-weight: 600;
+        margin: 0;
     }
 </style>
 
-<div class="container mt-5">
-    <div class="page-header">
-        <h2><i class="bi bi-people-fill"></i> Quản lý khách hàng</h2>
-        @Html.ActionLink("➕ Thêm khách hàng mới", "Create", null, new { @class = "btn btn-add shadow-sm" })
-    </div>
-
-    <div class="customer-card">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle text-center">
-                <thead>
-                    <tr>
-                        <th>Tên khách hàng</th>
-                        <th>Số điện thoại</th>
-                        <th>Email</th>
-                        <th>Địa chỉ</th>
-                        <th>Mật khẩu</th>
-                        <th style="width:190px;">Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>@item.CustomerName</td>
-                            <td>@item.CustomerPhone</td>
-                            <td>@item.CustomerEmail</td>
-                            <td class="text-muted">@item.CustomerAddress</td>
-                            <td><span class="badge-password">••••••</span></td>
-                            <td>
-                                <div class="d-flex justify-content-center gap-2">
-                                    @Html.ActionLink("✏️ Sửa", "Edit", new { id = item.CustomerID }, new { @class = "btn-action btn-warning text-white" })
-                                    @Html.ActionLink("👁️ Xem", "Details", new { id = item.CustomerID }, new { @class = "btn-action btn-info text-white" })
-                                    @Html.ActionLink("🗑️ Xóa", "Delete", new { id = item.CustomerID }, new { @class = "btn-action btn-danger text-white", onclick = "return confirm('Bạn có chắc muốn xóa khách hàng này không?');" })
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+<div class="page-wrapper">
+    <div class="container">
+        <!-- Header -->
+        <div class="page-header-card">
+            <h2>
+                <i class="bi bi-people-fill"></i>
+                Quản lý khách hàng
+            </h2>
         </div>
 
-        <div class="card-footer">
-            Tổng số khách hàng: @Model.Count()
+        <!-- Customer Table -->
+        <div class="customer-card">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+                    <thead>
+                        <tr>
+                            <th>Tên khách hàng</th>
+                            <th>Số điện thoại</th>
+                            <th>Email</th>
+                            <th>Địa chỉ</th>
+                            <th>Mật khẩu</th>
+                            <th style="width:180px;">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6">
+                                    <div class="empty-state">
+                                        <i class="bi bi-inbox"></i>
+                                        <p>Chưa có khách hàng nào trong hệ thống</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td><span class="customer-name">@item.CustomerName</span></td>
+                                    <td><span class="customer-phone"><i class="bi bi-telephone-fill"></i>@item.CustomerPhone</span></td>
+                                    <td><span class="customer-email"><i class="bi bi-envelope-fill"></i>@item.CustomerEmail</span></td>
+                                    <td><span class="customer-address"><i class="bi bi-geo-alt-fill"></i>@item.CustomerAddress</span></td>
+                                    <td><span class="badge-password"><i class="bi bi-lock-fill"></i> ••••••</span></td>
+                                    <td>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            @Html.ActionLink("Xem chi tiết", "Details", new { id = item.CustomerID }, new { @class = "btn-action btn-info" })
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Footer Stats -->
+            <div class="card-footer-stats">
+                <div class="stats-item">
+                    <div class="stats-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div class="stats-text">
+                        <span class="stats-label">Tổng khách hàng</span>
+                        <span class="stats-value">@Model.Count()</span>
+                    </div>
+                </div>
+                <div style="font-style: italic; color: #7f8c8d; font-size: 14px;">
+                    <i class="bi bi-clock-history"></i>
+                    Cập nhật: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+                </div>
+            </div>
         </div>
     </div>
 </div>

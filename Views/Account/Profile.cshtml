@@ -1,0 +1,179 @@
+﻿@model HoangLongTH.Models.AccountProfileViewModel
+
+@{
+    ViewBag.Title = "Thông tin tài khoản";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        /* Container chính */
+.account-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* Tiêu đề trang */
+.account-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #1f2937;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.account-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    border-radius: 2px;
+}
+
+/* Grid layout */
+.account-row {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 30px;
+    align-items: start;
+}
+
+/* Card styling */
+.account-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05),
+                0 10px 15px rgba(0, 0, 0, 0.08);
+    padding: 30px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.account-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+}
+
+.account-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.08),
+                0 16px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Alert styling */
+.alert-success {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    border: 1px solid #6ee7b7;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 25px;
+    color: #065f46;
+    font-weight: 500;
+    animation: slideDown 0.4s ease-out;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+}
+
+@@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive design */
+@@media (max-width: 992px) {
+    .account-row {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .account-page {
+        padding: 30px 15px;
+    }
+
+    .account-title {
+        font-size: 28px;
+    }
+}
+
+@@media (max-width: 576px) {
+    .account-card {
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .account-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .account-page {
+        padding: 20px 10px;
+    }
+}
+
+/* Animation cho cards khi load */
+.account-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.account-card:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+@@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Gradient background option */
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+}
+    </style>
+}
+
+<div class="account-page">
+    <h2 class="account-title">Thông tin tài khoản</h2>
+
+    @if (ViewBag.SuccessMessage != null)
+    {
+        <div class="alert alert-success">
+            @ViewBag.SuccessMessage
+        </div>
+    }
+
+    <div class="account-row">
+        <div class="account-card">
+            @Html.Partial("_ProfileInfo", Model)
+        </div>
+
+        <div class="account-card">
+            @Html.Partial("_ProfileEdit", Model)
+        </div>
+    </div>
+</div>

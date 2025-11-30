@@ -1,59 +1,197 @@
 ﻿@model HoangLongTH.Models.Customer
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Chi tiết khách hàng";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Details</h2>
+<style>
+    .details-wrapper {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 40px 0;
+    }
 
-<div>
-    <h4>Customer</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.CustomerName)
-        </dt>
+    .details-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+        padding: 35px 45px;
+        animation: fadeInUp 0.6s ease;
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.CustomerName)
-        </dd>
+    keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CustomerPhone)
-        </dt>
+    .details-title {
+        font-size: 28px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.CustomerPhone)
-        </dd>
+    .breadcrumb {
+        color: #6c757d;
+        margin-bottom: 25px;
+    }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CustomerEmail)
-        </dt>
+    .info-section {
+        margin-bottom: 20px;
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.CustomerEmail)
-        </dd>
+    .info-label {
+        font-weight: 700;
+        color: #2c3e50;
+        display: block;
+        margin-bottom: 6px;
+        font-size: 15px;
+    }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CustomerAddress)
-        </dt>
+    .info-box {
+        background: #f8f9ff;
+        border-radius: 10px;
+        padding: 12px 16px;
+        font-weight: 600;
+        color: #34495e;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: inset 0 0 4px rgba(102, 126, 234, 0.1);
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.CustomerAddress)
-        </dd>
+    .info-box i { color: #667eea; }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.User.Password)
-        </dt>
+    /* Đơn hàng */
+    .order-card {
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        padding: 25px;
+        margin-top: 30px;
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.User.Password)
-        </dd>
+    .order-card h4 {
+        font-weight: 700;
+        color: #2d3748;
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
 
-    </dl>
+    .order-table th {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+    }
+
+    .order-table td {
+        vertical-align: middle;
+        color: #2d3748;
+    }
+
+    .btn-back {
+        background: #6c757d;
+        color: #fff;
+        border-radius: 10px;
+        padding: 10px 22px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+    }
+
+    .btn-back:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+    }
+</style>
+
+<div class="details-wrapper">
+    <div class="container">
+        <div class="breadcrumb">
+            Trang quản trị / Khách hàng / <strong>Chi tiết</strong>
+        </div>
+
+        <div class="details-card">
+            <h2 class="details-title">
+                <i class="fas fa-user"></i> Thông Tin Khách Hàng
+            </h2>
+
+            <div class="info-section">
+                <span class="info-label">Họ tên khách hàng:</span>
+                <span class="info-box"><i class="fas fa-user"></i> @Model.CustomerName</span>
+            </div>
+
+            <div class="info-section">
+                <span class="info-label">Số điện thoại:</span>
+                <span class="info-box"><i class="fas fa-phone"></i> @Model.CustomerPhone</span>
+            </div>
+
+            <div class="info-section">
+                <span class="info-label">Email:</span>
+                <span class="info-box"><i class="fas fa-envelope"></i> @Model.CustomerEmail</span>
+            </div>
+
+            <div class="info-section">
+                <span class="info-label">Địa chỉ:</span>
+                <span class="info-box"><i class="fas fa-map-marker-alt"></i> @Model.CustomerAddress</span>
+            </div>
+
+            <div class="info-section">
+                <span class="info-label">Tài khoản liên kết:</span>
+                <span class="info-box">
+                    <i class="fas fa-user-circle"></i>
+                    @(Model.User != null ? Model.Username : "Chưa liên kết")
+                </span>
+            </div>
+
+            <!-- Danh sách đơn hàng -->
+            <div class="order-card">
+                <h4><i class="fas fa-box"></i> Danh sách đơn hàng của khách hàng</h4>
+
+                @if (Model.Order != null && Model.Order.Any())
+                {
+                    <table class="table table-bordered order-table text-center">
+                        <thead>
+                            <tr>
+                                <th>Mã đơn</th>
+                                <th>Ngày đặt</th>
+                                <th>Tổng tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model.Order)
+                            {
+                                <tr>
+                                    <td>@order.OrderID</td>
+                                    <td>@order.OrderDate</td>
+                                    <td>@String.Format("{0:N0} đ", order.TotalAmount)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p class="text-muted">Khách hàng này chưa có đơn hàng nào.</p>
+                }
+            </div>
+
+            <div class="mt-4 text-right">
+                <a href="@Url.Action("Index")" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Quay lại
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.CustomerID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

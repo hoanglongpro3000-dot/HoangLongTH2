@@ -1,41 +1,213 @@
 ﻿@model HoangLongTH.Models.Category
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Chỉnh sửa danh mục";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Edit</h2>
+<style>
+    /* Nền nhẹ */
+    .category-edit-page {
+        background: #eef1f7;
+        min-height: calc(100vh - 120px);
+        padding-top: 25px;
+        padding-bottom: 40px;
+    }
 
+    /* CARD FORM */
+    .category-card {
+        border-radius: 18px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.10);
+        animation: fadeInUp 0.5s ease;
+    }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Category</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.CategoryID)
+    .category-card .card-header {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef);
+        padding: 18px 22px;
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: .3px;
+    }
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.CategoryName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CategoryName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CategoryName, "", new { @class = "text-danger" })
+    /* SIDEBAR CARD */
+    .category-sidebar {
+        border-radius: 18px;
+        border: none;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.10);
+        background: white;
+        animation: fadeInUp 0.7s ease;
+    }
+
+    .category-sidebar .card-header {
+        background: linear-gradient(135deg, #a855f7, #ec4899);
+        color: white;
+        font-weight: 700;
+        padding: 15px 20px;
+    }
+
+    /* Badge warning */
+    .badge-soft-warning {
+        padding: 8px 16px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #fcd34d, #f59e0b);
+        color: white;
+        font-weight: 600;
+    }
+
+    /* INPUT đẹp hơn */
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        padding: 10px 14px;
+        font-size: 15px;
+        transition: .3s;
+    }
+
+    .form-control:focus {
+        border-color: #7c3aed;
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.25);
+    }
+
+    /* BUTTON */
+    .btn-gradient-save {
+        background: linear-gradient(135deg, #10b981, #059669);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 10px 22px;
+        border-radius: 12px;
+        transition: .25s;
+    }
+
+    .btn-gradient-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(16, 185, 129, .35);
+    }
+
+    .btn-back {
+        padding: 10px 18px;
+        border-radius: 12px;
+        font-weight: 500;
+    }
+
+    /* Animation chung */
+    keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+</style>
+
+<div class="category-edit-page">
+    <div class="container-fluid">
+
+        <!-- HEADER TITLE -->
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <small class="text-muted">
+                    Trang quản trị / Danh mục / <strong>Chỉnh sửa</strong>
+                </small>
+
+                <h3 class="mt-2 mb-1" style="
+                    background: linear-gradient(135deg, #4f46e5, #7c3aed, #db2777);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    font-weight: 800;">
+                    <i class="fas fa-edit"></i> Chỉnh Sửa Danh Mục
+                </h3>
+
+                <p class="text-muted mb-0">
+                    Cập nhật lại tên danh mục để hiển thị chính xác cho khách hàng.
+                </p>
+            </div>
+
+            <div class="col-md-4 text-md-right mt-3 mt-md-0">
+                <span class="badge-soft-warning">
+                    <i class="fas fa-pen-nib"></i> Đang chỉnh sửa
+                </span>
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+        <div class="row">
+
+            <!-- FORM CHÍNH -->
+            <div class="col-lg-8 mb-4">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.CategoryID)
+
+                    <div class="card category-card">
+                        <div class="card-header text-white">
+                            <strong>Thông Tin Danh Mục</strong>
+                        </div>
+
+                        <div class="card-body">
+
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+
+                            <div class="form-group">
+                                <label class="font-weight-bold">
+                                    Tên danh mục <span class="text-danger">*</span>
+                                </label>
+
+                                @Html.EditorFor(model => model.CategoryName,
+                                    new
+                                    {
+                                        htmlAttributes = new
+                                        {
+                                            @class = "form-control",
+                                            placeholder = "Ví dụ: Điện thoại, Laptop..."
+                                        }
+                                    })
+
+                                <small class="form-text text-muted">
+                                    Tên này sẽ được hiển thị ở giao diện khách hàng.
+                                </small>
+
+                                @Html.ValidationMessageFor(model => model.CategoryName, "", new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+
+                        <div class="card-footer text-right">
+                            <button type="submit" class="btn-gradient-save">
+                                <i class="fas fa-save"></i> Lưu thay đổi
+                            </button>
+
+                            <a href="@Url.Action("Index")" class="btn btn-secondary btn-back ml-2">
+                                <i class="fas fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- SIDEBAR PHẢI -->
+            <div class="col-lg-4">
+                <div class="card category-sidebar">
+                    <div class="card-header">
+                        <strong><i class="fas fa-lightbulb"></i> Gợi ý chỉnh sửa</strong>
+                    </div>
+
+                    <div class="card-body">
+                        <ul class="list-unstyled mb-3">
+                            <li>• Tên danh mục nên ngắn gọn và dễ hiểu.</li>
+                            <li>• Không dùng ký tự đặc biệt hoặc emoji.</li>
+                            <li>• Không nên đổi tên nếu danh mục đang có nhiều sản phẩm.</li>
+                        </ul>
+
+                        <p class="text-muted mb-0">
+                            Sau khi lưu, tất cả sản phẩm thuộc danh mục này sẽ tự động hiển thị tên mới.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
+
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {

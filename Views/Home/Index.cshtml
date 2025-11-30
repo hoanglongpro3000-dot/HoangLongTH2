@@ -1,10 +1,10 @@
-﻿@model IEnumerable<HoangLongTH.Models.Product>
+﻿@model HoangLongTH.Models.HomeViewModel
 @{
     ViewBag.Title = "Trang chủ";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@functions{
+@functions {
     string CatSlug(int categoryId)
     {
         switch (categoryId)
@@ -28,479 +28,365 @@
 }
 
 <style>
+    :root {
+        --shopee-primary: #EE4D2D;
+        --shopee-hover: #d73211;
+        --shopee-light: #fff3f0;
+        --shopee-orange: #f69113;
+        --text-dark: #333333;
+        --text-gray: #757575;
+        --border-light: #efefef;
+        --bg-gray: #f5f5f5;
+    }
+
+    body {
+        background-color: var(--bg-gray);
+    }
+
+    /* ================= HERO SLIDER ================= */
     .hero-section {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 80px 20px;
-        text-align: center;
-        color: white;
-        margin-bottom: 60px;
-        border-radius: 0 0 50px 50px;
+        max-width: 1200px;
+        margin: 0 auto 30px;
+        position: relative;
     }
 
-    .hero-title {
-        font-size: 3rem;
-        font-weight: 700;
-        margin-bottom: 20px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,.2);
+    .hero-img {
+        width: 100%;
+        height: 320px;
+        object-fit: contain;
+        object-position: center;
     }
 
-    .hero-subtitle {
-        font-size: 1.3rem;
-        opacity: 0.95;
-        margin-bottom: 30px;
+    @@media (max-width: 768px) {
+        .hero-img {
+            height: 200px;
+        }
     }
 
+    /* ================= PRODUCTS GRID ================= */
     .products-section {
-        max-width: 1400px;
+        max-width: 1200px;
         margin: 0 auto;
-        padding: 0 20px 60px;
-    }
-
-    .section-header {
-        text-align: center;
-        margin-bottom: 50px;
+        padding: 0 15px 40px;
     }
 
     .section-title {
-        font-size: 2.5rem;
+        font-size: 1.4rem;
         font-weight: 700;
-        color: #2d3748;
-        margin-bottom: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 16px;
-    }
-
-    .section-subtitle {
-        font-size: 1.1rem;
-        color: #718096;
+        margin: 10px 0 15px;
+        color: var(--text-dark);
     }
 
     .filter-buttons {
         display: flex;
         justify-content: center;
-        gap: 12px;
         flex-wrap: wrap;
-        margin-bottom: 40px;
+        gap: 0;
+        margin-bottom: 15px;
+        background: #fff;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.06);
     }
 
     .filter-btn {
-        padding: 12px 28px;
-        border: 2px solid #e2e8f0;
-        background: white;
-        border-radius: 25px;
-        font-weight: 600;
-        color: #4a5568;
+        padding: 12px 26px;
+        border: none;
+        background: transparent;
+        border-bottom: 3px solid transparent;
+        font-size: 0.9rem;
         cursor: pointer;
-        transition: all 0.3s;
+        color: var(--text-dark);
+        transition: 0.2s;
     }
 
         .filter-btn:hover {
-            border-color: #667eea;
-            color: #667eea;
-            transform: translateY(-2px);
+            background: var(--shopee-light);
+            color: var(--shopee-primary);
         }
 
         .filter-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-color: transparent;
+            border-bottom-color: var(--shopee-primary);
+            color: var(--shopee-primary);
+            font-weight: 600;
         }
 
     .products-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr ));
-        gap: 30px;
-    }
-
-    /* Responsive grid - tối ưu cho các kích thước màn hình */
-    @@media (max-width: 1400px) {
-        .products-grid {
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 25px;
-        }
-    }
-
-    @@media (max-width: 1200px) {
-        .products-grid {
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 20px;
-        }
-
-        .btn-detail,
-        .btn-add-cart {
-            font-size: 0.85rem;
-            padding: 10px 4px;
-            gap: 4px;
-        }
-    }
-
-    @@media (max-width: 992px) {
-        .products-grid {
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        }
-
-        .btn-detail,
-        .btn-add-cart {
-            font-size: 0.8rem;
-            padding: 10px 2px;
-        }
-
-            .btn-detail span:last-child,
-            .btn-add-cart span:last-child {
-                font-size: 0.8rem;
-            }
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+        gap: 12px;
+        background: white;
+        padding: 12px;
     }
 
     .product-card {
         background: white;
-        border-radius: 20px;
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0,0,0,.08);
-        transition: all 0.3s ease;
+        padding-bottom: 12px;
+        transition: 0.2s;
         position: relative;
-        display: flex;
-        flex-direction: column;
     }
 
         .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 40px rgba(0,0,0,.15);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            border-color: var(--shopee-primary);
         }
 
-    .product-tag {
-        position: absolute;
-        top: 16px;
-        right: 16px;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: white;
-        z-index: 10;
-        box-shadow: 0 4px 12px rgba(0,0,0,.2);
-    }
-
-        .product-tag.phone {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        .product-card img {
+            width: 100%;
+            height: 190px;
+            object-fit: contain;
+            padding: 10px;
+            background: #fff;
+            transition: transform 0.2s;
         }
 
-        .product-tag.laptop {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        .product-card:hover img {
+            transform: scale(1.05);
         }
 
-        .product-tag.accessory {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        }
-
-        .product-tag.all {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-        }
-
-    /* Image container với height cố định */
-    .product-image-container {
-        width: 100%;
-        height: 250px;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #f7fafc;
-    }
-
-    .product-card img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        padding: 20px;
-        transition: transform 0.3s ease;
-    }
-
-    .product-card:hover img {
-        transform: scale(1.05);
+    .product-card-body {
+        padding: 10px 10px 0;
     }
 
     .product-card h3 {
-        padding: 0 20px;
-        margin: 20px 0 12px;
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: #2d3748;
+        font-size: 0.9rem;
+        height: 40px;
+        line-height: 1.3;
+        margin-bottom: 6px;
+        overflow: hidden;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
-        overflow: hidden;
-        min-height: 58px;
     }
 
         .product-card h3 a {
-            color: #2d3748;
             text-decoration: none;
-            transition: color 0.3s;
+            color: var(--text-dark);
         }
 
-            .product-card h3 a:hover {
-                color: #667eea;
-            }
+    .product-card:hover h3 a {
+        color: var(--shopee-primary);
+    }
 
-    .product-spec {
-        padding: 0 20px;
-        color: #718096;
-        font-size: 0.9rem;
-        margin-bottom: 16px;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        min-height: 42px;
+    .product-price-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 4px;
     }
 
     .product-price {
-        padding: 0 20px;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #667eea;
-        margin-bottom: 20px;
+        font-size: 1rem;
+        color: var(--shopee-primary);
+        font-weight: 600;
     }
 
-    .product-actions {
-        padding: 0 20px 20px;
+        .product-price::before {
+            content: "₫";
+            margin-right: 2px;
+            font-size: 0.9rem;
+        }
+
+    .product-sold {
+        font-size: 0.75rem;
+        color: var(--text-gray);
+    }
+
+    /* Discount ribbon */
+    .product-discount {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        background: rgba(255, 212, 36, 0.95);
+        color: var(--shopee-primary);
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 0 3px 3px 0;
+        text-transform: uppercase;
+    }
+
+    /* Tag danh mục ở góc phải */
+    .product-tag {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 0.65rem;
+        padding: 3px 8px;
+        border-radius: 999px;
+        color: #fff;
+        text-transform: uppercase;
+    }
+
+        .product-tag.phone {
+            background: var(--shopee-primary);
+        }
+
+        .product-tag.laptop {
+            background: #26aa99;
+        }
+
+        .product-tag.accessory {
+            background: #f59e0b;
+        }
+
+    /* ========== 3 NÚT DẠNG HÀNG DỌC ========== */
+    .product-actions-vertical {
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        margin-top: auto;
+        gap: 6px;
+        margin-top: 10px;
     }
 
-    .btn-row {
-        display: flex;
-        gap: 10px;
-    }
-
-    .btn-detail,
-    .btn-add-cart {
-        flex: 1;
-        padding: 12px 6px;
-        border-radius: 10px;
-        font-weight: 600;
-        text-decoration: none;
-        text-align: center;
-        transition: all 0.3s;
+    .action-v {
+        width: 100%;
+        padding: 9px 10px;
+        font-size: 0.8rem;
+        border-radius: 6px;
+        border: none;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 6px;
-        font-size: 0.9rem;
-        line-height: 1.2;
-        white-space: nowrap;
-        min-width: 0;
-    }
-
-    .btn-detail {
-        background: white;
-        border: 2px solid #667eea;
-        color: #667eea;
-    }
-
-        .btn-detail:hover {
-            background: #667eea;
-            color: white;
-            text-decoration: none;
-        }
-
-    .btn-add-cart {
-        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-        color: white;
-        border: none;
-        box-shadow: 0 4px 12px rgba(72,187,120,.3);
-    }
-
-        .btn-add-cart:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(72,187,120,.4);
-            color: white;
-            text-decoration: none;
-        }
-
-    .btn-buy-now {
-        width: 100%;
-        padding: 14px 20px;
-        background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-weight: 700;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
         text-decoration: none;
-        text-align: center;
-        transition: all 0.3s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        font-size: 1.05rem;
-        box-shadow: 0 4px 12px rgba(245,101,101,.3);
-    }
-
-        .btn-buy-now:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(245,101,101,.4);
-            color: white;
-            text-decoration: none;
-        }
-
-    /* Icon và text trong buttons */
-    .btn-detail span:first-child,
-    .btn-add-cart span:first-child {
-        font-size: 1rem;
-        line-height: 1;
-        flex-shrink: 0;
-    }
-
-    .btn-detail span:last-child,
-    .btn-add-cart span:last-child {
-        overflow: hidden;
-        text-overflow: ellipsis;
         white-space: nowrap;
     }
 
-    .btn-buy-now span:first-child {
-        font-size: 1.1rem;
-        line-height: 1;
-        flex-shrink: 0;
+        .action-v i {
+            font-size: 0.85rem;
+        }
+
+    .add-cart {
+        background: var(--shopee-primary);
+        color: #fff;
     }
 
+        .add-cart:hover {
+            background: var(--shopee-hover);
+        }
+
+    .buy-now {
+        background: var(--shopee-orange);
+        color: #fff;
+    }
+
+        .buy-now:hover {
+            background: #e67e00;
+        }
+
+    .detail-btn {
+        background: #fff;
+        border: 1px solid var(--shopee-primary);
+        color: var(--shopee-primary);
+    }
+
+        .detail-btn:hover {
+            background: var(--shopee-light);
+        }
+
+    /* Empty state */
     .empty-state {
         grid-column: 1 / -1;
         text-align: center;
-        padding: 80px 20px;
-        color: #718096;
-        font-size: 1.2rem;
-    }
-
-    .empty-icon {
-        font-size: 4rem;
-        margin-bottom: 20px;
-        opacity: 0.5;
-    }
-
-    @@media (max-width: 768px) {
-        .hero-title {
-            font-size: 2rem;
-        }
-
-        .hero-subtitle {
-            font-size: 1rem;
-        }
-
-        .section-title {
-            font-size: 1.8rem;
-        }
-
-        .products-grid {
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .filter-buttons {
-            gap: 8px;
-        }
-
-        .filter-btn {
-            padding: 10px 20px;
-            font-size: 0.9rem;
-        }
-
-        .product-image-container {
-            height: 200px;
-        }
-
-        .product-card img {
-            padding: 15px;
-        }
-
-        .btn-detail,
-        .btn-add-cart {
-            font-size: 0.8rem;
-            padding: 10px 4px;
-            gap: 4px;
-        }
-
-        .btn-buy-now {
-            font-size: 0.95rem;
-            padding: 12px 16px;
-        }
+        padding: 60px 20px;
+        color: var(--text-gray);
     }
 </style>
 
-<div class="hero-section">
-    <h1 class="hero-title">🛍️ Chào mừng đến với cửa hàng</h1>
-    <p class="hero-subtitle">Khám phá những sản phẩm công nghệ tốt nhất</p>
+<!-- ========== HERO SLIDER ========== -->
+<div id="heroCarousel" class="carousel slide carousel-fade hero-section" data-bs-ride="carousel" data-bs-interval="3500">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="~/Content/Uploads/kich-thuoc-banner-shopee-1.png" class="d-block w-100 hero-img" alt="Banner 1" />
+        </div>
+        <div class="carousel-item">
+            <img src="~/Content/Uploads/penci-frbzpvmn1748416131.jpg" class="d-block w-100 hero-img" alt="Banner 2" />
+        </div>
+        <div class="carousel-item">
+            <img src="~/Content/Uploads/20230723_Vne80hqk.jpg" class="d-block w-100 hero-img" alt="Banner 3" />
+        </div>
+    </div>
+
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+    </div>
 </div>
 
+<!-- ========== SẢN PHẨM MỚI NHẤT ========== -->
 <section class="products-section">
-    <div class="section-header">
-        <h2 class="section-title">
-            <span>🔥</span>
-            <span>Sản phẩm nổi bật</span>
-        </h2>
-        <p class="section-subtitle">Được khách hàng yêu thích nhất</p>
-    </div>
+    <h3 class="section-title">Sản phẩm mới nhất</h3>
 
     <div class="filter-buttons">
-        <button class="filter-btn active" onclick="filterProducts('all')">Tất cả</button>
-        <button class="filter-btn" onclick="filterProducts('phone')">📱 Điện thoại</button>
-        <button class="filter-btn" onclick="filterProducts('laptop')">💻 Laptop</button>
-        <button class="filter-btn" onclick="filterProducts('accessory')">🎧 Phụ kiện</button>
+        <button class="filter-btn active" onclick="filterProducts('all', event)">Tất cả</button>
+        <button class="filter-btn" onclick="filterProducts('phone', event)">Điện thoại</button>
+        <button class="filter-btn" onclick="filterProducts('laptop', event)">Laptop</button>
+        <button class="filter-btn" onclick="filterProducts('accessory', event)">Phụ kiện</button>
     </div>
 
-    <div class="products-grid">
-        @if (Model != null && Model.Any())
+    <div class="products-grid" id="new-products-grid">
+        @if (Model != null && Model.NewProducts != null && Model.NewProducts.Any())
         {
-            foreach (var p in Model)
+            int count = 0;
+            var rnd = new Random();
+
+            foreach (var p in Model.NewProducts)
             {
+                count++;
+
                 var cat = CatSlug(p.CategoryID);
                 var catLabel = CatLabel(p.CategoryID);
                 var img = string.IsNullOrWhiteSpace(p.ProductImage)
-                            ? Url.Content("~/Content/imgs/no-image.png")
-                            : Url.Content(p.ProductImage);
-                var priceDisplay = p.ProductPrice.ToString("N0") + "₫";
+                    ? Url.Content("~/Content/imgs/no-image.png")
+                    : Url.Content(p.ProductImage);
+                var priceDisplay = p.ProductPrice.ToString("N0");
+
+                var hasDiscount = (count % 3 == 0);
+                var sold = rnd.Next(500, 9000);
 
                 <div class="product-card" data-category="@cat">
+                    @if (hasDiscount)
+                    {
+                        <div class="product-discount">GIẢM 15%</div>
+                    }
                     <div class="product-tag @cat">@catLabel</div>
 
                     <a href="@Url.Action("Details", "Product", new { id = p.ProductID })">
                         <img src="@img" alt="@p.ProductName" />
                     </a>
 
-                    <h3>
-                        <a href="@Url.Action("Details", "Product", new { id = p.ProductID })">
-                            @p.ProductName
-                        </a>
-                    </h3>
-
-                    <p class="product-spec">
-                        @((p.ProductDecription ?? "Chưa có mô tả").Length > 60
-                        ? p.ProductDecription.Substring(0, 60) + "..."
-                        : (p.ProductDecription ?? "Chưa có mô tả"))
-                    </p>
-
-                    <p class="product-price">@priceDisplay</p>
-
-                    <div class="product-actions">
-                        <div class="btn-row">
-                            <a class="btn-detail" href="@Url.Action("Details", "Product", new { id = p.ProductID })">
-                                <span>👁️</span>
-                                <span>Chi tiết</span>
+                    <div class="product-card-body">
+                        <h3>
+                            <a href="@Url.Action("Details", "Product", new { id = p.ProductID })">
+                                @p.ProductName
                             </a>
-                            <a class="btn-add-cart" href="@Url.Action("AddItem", "Cart", new { id = p.ProductID, quantity = 1 })">
-                                <span>🛒</span>
-                                <span>Giỏ hàng</span>
+                        </h3>
+
+                        <div class="product-price-wrapper">
+                            <p class="product-price">@priceDisplay</p>
+                            <span class="product-sold">Đã bán @sold</span>
+                        </div>
+
+                        <div class="product-actions-vertical">
+                            <button class="action-v add-cart" onclick="addToCart(@p.ProductID)">
+                                <i class="fas fa-shopping-cart"></i> Thêm giỏ
+                            </button>
+
+                            <button class="action-v buy-now" onclick="buyNow(@p.ProductID)">
+                                <i class="fas fa-bolt"></i> Mua ngay
+                            </button>
+
+                            <a href="@Url.Action("Details", "Product", new { id = p.ProductID })"
+                               class="action-v detail-btn">
+                                <i class="fas fa-eye"></i> Chi tiết
                             </a>
                         </div>
-                        <a class="btn-buy-now" href="@Url.Action("AddItem", "Cart", new { id = p.ProductID, quantity = 1, redirect = "checkout" })">
-                            <span>⚡</span>
-                            <span>MUA NGAY</span>
-                        </a>
                     </div>
                 </div>
             }
@@ -508,46 +394,201 @@
         else
         {
             <div class="empty-state">
-                <div class="empty-icon">📦</div>
-                <p>Chưa có sản phẩm. Hãy thêm sản phẩm trong Admin.</p>
+                🛒 Chưa có sản phẩm nào.
             </div>
         }
     </div>
 </section>
 
-@section scripts {
-    <script>
-        function filterProducts(category) {
-            // Update active button
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
+<!-- ========== SẢN PHẨM NỔI BẬT (BÁN CHẠY) ========== -->
+<section class="products-section">
+    <h3 class="section-title">Sản phẩm nổi bật (bán chạy)</h3>
 
-            // Filter products
-            const cards = document.querySelectorAll('.product-card');
-            cards.forEach(card => {
+    <div class="products-grid">
+        @if (Model != null && Model.BestSellerProducts != null && Model.BestSellerProducts.Any())
+        {
+            int count2 = 0;
+            var rnd2 = new Random();
+
+            foreach (var p in Model.BestSellerProducts)
+            {
+                count2++;
+
+                var cat = CatSlug(p.CategoryID);
+                var catLabel = CatLabel(p.CategoryID);
+                var img = string.IsNullOrWhiteSpace(p.ProductImage)
+                    ? Url.Content("~/Content/imgs/no-image.png")
+                    : Url.Content(p.ProductImage);
+                var priceDisplay = p.ProductPrice.ToString("N0");
+
+                var hasDiscount = (count2 % 2 == 0); // có thể đổi text: "BÁN CHẠY"
+                var sold = rnd2.Next(2000, 20000);
+
+                <div class="product-card" data-category="@cat">
+                    @if (hasDiscount)
+                    {
+                        <div class="product-discount">BÁN CHẠY</div>
+                    }
+                    <div class="product-tag @cat">@catLabel</div>
+
+                    <a href="@Url.Action("Details", "Product", new { id = p.ProductID })">
+                        <img src="@img" alt="@p.ProductName" />
+                    </a>
+
+                    <div class="product-card-body">
+                        <h3>
+                            <a href="@Url.Action("Details", "Product", new { id = p.ProductID })">
+                                @p.ProductName
+                            </a>
+                        </h3>
+
+                        <div class="product-price-wrapper">
+                            <p class="product-price">@priceDisplay</p>
+                            <span class="product-sold">Đã bán @sold</span>
+                        </div>
+
+                        <div class="product-actions-vertical">
+                            <button class="action-v add-cart" onclick="addToCart(@p.ProductID)">
+                                <i class="fas fa-shopping-cart"></i> Thêm giỏ
+                            </button>
+
+                            <button class="action-v buy-now" onclick="buyNow(@p.ProductID)">
+                                <i class="fas fa-bolt"></i> Mua ngay
+                            </button>
+
+                            <a href="@Url.Action("Details", "Product", new { id = p.ProductID })"
+                               class="action-v detail-btn">
+                                <i class="fas fa-eye"></i> Chi tiết
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="empty-state">
+                Chưa có dữ liệu sản phẩm nổi bật.
+            </div>
+        }
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        // Hero auto slide
+        document.addEventListener("DOMContentLoaded", function () {
+            new bootstrap.Carousel(document.querySelector('#heroCarousel'), {
+                interval: 3500,
+                ride: 'carousel'
+            });
+        });
+
+        // Lọc theo danh mục (chỉ áp dụng cho list sản phẩm mới)
+        function filterProducts(category, e) {
+            if (e) {
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+            }
+
+            document.querySelectorAll('#new-products-grid .product-card').forEach(card => {
                 if (category === 'all' || card.dataset.category === category) {
                     card.style.display = 'block';
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'scale(1)';
-                    }, 10);
                 } else {
-                    card.style.opacity = '0';
-                    card.style.transform = 'scale(0.8)';
-                    setTimeout(() => {
-                        card.style.display = 'none';
-                    }, 300);
+                    card.style.display = 'none';
                 }
             });
         }
 
-        // Add transition styles
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.product-card').forEach(card => {
-                card.style.transition = 'opacity 0.3s, transform 0.3s';
+        // Kiểm tra đăng nhập
+        var isAuthenticated = '@(Session["Username"] ?? "")' !== '';
+
+        function updateCartCount() {
+            $.get('@Url.Action("GetCartCount", "Cart")', function (data) {
+                if (data && data.count !== undefined) {
+                    $("#cart-count").text(data.count);
+                }
             });
-        });
+        }
+
+        // Thêm vào giỏ
+        function addToCart(productId) {
+            if (!isAuthenticated) {
+                if (confirm("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng. Đăng nhập ngay?")) {
+                    window.location.href = '@Url.Action("Login", "Account")';
+                }
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("AddItem", "Cart")',
+                type: 'GET',
+                data: { id: productId, quantity: 1 },
+                success: function (res) {
+                    if (!res) {
+                        alert("❌ Có lỗi xảy ra, vui lòng thử lại!");
+                        return;
+                    }
+
+                    if (res.success === false) {
+                        alert(res.message || "Không thể thêm sản phẩm vào giỏ.");
+                        return;
+                    }
+
+                    if (res.count !== undefined) {
+                        $("#cart-count").text(res.count);
+                    } else if (typeof updateCartCount === "function") {
+                        updateCartCount();
+                    }
+
+                    const toast = document.createElement('div');
+                    toast.textContent = "✅ Đã thêm sản phẩm vào giỏ hàng!";
+                    toast.style.position = "fixed";
+                    toast.style.bottom = "30px";
+                    toast.style.right = "30px";
+                    toast.style.background = "#48bb78";
+                    toast.style.color = "#fff";
+                    toast.style.padding = "10px 18px";
+                    toast.style.borderRadius = "8px";
+                    toast.style.boxShadow = "0 2px 10px rgba(0,0,0,0.2)";
+                    toast.style.zIndex = 9999;
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 2200);
+                },
+                error: function (xhr) {
+                    if (xhr.status === 401) {
+                        alert("❌ Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.");
+                    } else {
+                        alert("❌ Có lỗi khi thêm vào giỏ hàng. Vui lòng thử lại!");
+                    }
+                }
+            });
+        }
+
+        // Mua ngay
+        function buyNow(productId) {
+            if (!isAuthenticated) {
+                if (confirm("Bạn cần đăng nhập để mua hàng. Đăng nhập ngay?")) {
+                    window.location.href = '@Url.Action("Login", "Account")';
+                }
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("AddItem", "Cart")',
+                type: 'GET',
+                data: { id: productId, quantity: 1 },
+                success: function (res) {
+                    if (res && res.success) {
+                        window.location.href = '@Url.Action("Checkout", "Order")';
+                    } else {
+                        alert("Không thể thêm sản phẩm để mua ngay.");
+                    }
+                },
+                error: function () {
+                    alert("Lỗi hệ thống khi mua ngay. Vui lòng thử lại!");
+                }
+            });
+        }
     </script>
 }

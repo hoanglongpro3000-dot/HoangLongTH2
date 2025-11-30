@@ -1,55 +1,224 @@
 ﻿@model HoangLongTH.Models.User
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Tạo người dùng";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Create</h2>
+<style>
+    .user-create-page {
+        background: #f5f7fb;
+        min-height: calc(100vh - 120px);
+        padding-top: 20px;
+        padding-bottom: 40px;
+    }
 
+    .user-card,
+    .user-sidebar {
+        border-radius: 16px;
+        border: none;
+        box-shadow: 0 8px 25px rgba(0,0,0,.12);
+    }
 
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>User</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+        .user-card .card-header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed, #db2777);
+            color: #fff;
+            border-bottom: 3px solid rgba(255,255,255,0.4);
+            font-weight: 700;
+        }
+
+    .badge-soft-info {
+        display: inline-block;
+        padding: 7px 16px;
+        border-radius: 999px;
+        background: rgba(102, 126, 234, 0.15);
+        color: #4454c3;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .form-label-strong {
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #111827;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        padding: 10px 14px;
+        font-size: 15px;
+        transition: .25s;
+    }
+
+        .form-control:focus {
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124,58,237,.25);
+        }
+
+    .btn-save-gradient {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        border: none;
+        color: #ffffff;
+        font-weight: 600;
+        padding: 9px 22px;
+        border-radius: 12px;
+        transition: .25s;
+    }
+
+        .btn-save-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(34,197,94,.35);
+        }
+
+    .btn-back {
+        border-radius: 12px;
+        padding: 9px 18px;
+        font-weight: 500;
+    }
+
+    .error-box {
+        background: #fee2e2;
+        color: #b91c1c;
+        border: 1px solid #fca5a5;
+        padding: 10px 15px;
+        margin-bottom: 15px;
+        border-radius: 10px;
+    }
+</style>
+
+<div class="user-create-page">
+    <div class="container-fluid">
+
+        <!-- HEADER -->
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <small class="text-muted">
+                    Trang quản trị / Người dùng / <strong>Tạo mới</strong>
+                </small>
+                <h3 class="mt-2 mb-1"
+                    style="background: linear-gradient(135deg,#4f46e5,#7c3aed,#db2777);
+                           -webkit-background-clip:text;
+                           -webkit-text-fill-color:transparent;
+                           font-weight:800;">
+                    <i class="fas fa-user-plus"></i> Tạo Tài Khoản Admin
+                </h3>
+                <p class="text-muted mb-0">
+                    Thêm tài khoản quản trị mới vào hệ thống (chỉ vai trò <strong>Admin</strong>).
+                </p>
+            </div>
+            <div class="col-md-4 text-md-right mt-3 mt-md-0">
+                <span class="badge-soft-info">
+                    <i class="fas fa-users-cog"></i> Quản lý tài khoản hệ thống
+                </span>
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+        <div class="row">
+            <!-- FORM CHÍNH -->
+            <div class="col-lg-8 mb-4">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="card user-card">
+                        <div class="card-header">
+                            <strong>Thông Tin Người Dùng</strong>
+                        </div>
+
+                        <div class="card-body">
+
+                            @* Hiển thị lỗi xác thực nếu có *@
+                            @if (ViewBag.ErrorDetails != null)
+                            {
+                                <div class="error-box">
+                                    <strong>Lỗi xác thực:</strong><br />
+                                    @Html.Raw(ViewBag.ErrorDetails)
+                                </div>
+                            }
+
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+
+                            <!-- Username -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">
+                                    Tên đăng nhập <span class="text-danger">*</span>
+                                </label>
+                                @Html.TextBoxFor(m => m.Username,
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        placeholder = "Nhập tên đăng nhập (ví dụ: admin, hoanglong...)"
+                                    })
+                                @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- Password -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">
+                                    Mật khẩu <span class="text-danger">*</span>
+                                </label>
+                                @Html.PasswordFor(m => m.Password,
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        placeholder = "Nhập mật khẩu"
+                                    })
+                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- UserRole (chỉ Admin) -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">
+                                    Vai trò <span class="text-danger">*</span>
+                                </label>
+                                @Html.DropDownListFor(m => m.UserRole,
+                                    new SelectList(
+                                        new[]
+                                        {
+                                            new { Value = "Admin", Text = "Admin" }
+                                        },
+                                        "Value", "Text", Model?.UserRole ?? "Admin"
+                                    ),
+                                    null,@* không có dòng "-- Chọn vai trò --" *@
+new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.UserRole, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="card-footer text-right bg-light">
+                            <button type="submit" class="btn-save-gradient">
+                                <i class="fas fa-save"></i> Lưu
+                            </button>
+                            <a href="@Url.Action("Index")" class="btn btn-secondary btn-back ml-2">
+                                <i class="fas fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- CỘT BÊN PHẢI: GỢI Ý / LƯU Ý -->
+            <div class="col-lg-4">
+                <div class="card user-sidebar">
+                    <div class="card-header bg-white border-0">
+                        <strong><i class="fas fa-lightbulb"></i> Lưu ý khi tạo tài khoản</strong>
+                    </div>
+                    <div class="card-body pt-0">
+                        <ul class="list-unstyled mb-3">
+                            <li>• Chỉ tạo tài khoản <strong>Admin</strong> cho người quản trị hệ thống.</li>
+                            <li>• Hạn chế đặt mật khẩu quá dễ đoán: <em>123456, admin, password...</em></li>
+                        </ul>
+                        <p class="text-muted mb-0">
+                            Sau khi tạo, bạn có thể chỉnh sửa hoặc xóa tài khoản này ở trang
+                            <strong>Danh sách người dùng</strong>.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.UserRole, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UserRole, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.UserRole, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {

@@ -23,6 +23,8 @@ namespace HoangLongTH.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public string UserRole { get; set; }
+        public string Email { get; set; }
+        public string SDT { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Customer> Customer { get; set; }

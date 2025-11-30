@@ -12,106 +12,191 @@ namespace HoangLongTH.Areas.Admin.Controllers
 {
     public class UsersController : Controller
     {
-        private MyStroreEntities db = new MyStroreEntities();
+        private MyStroreEntities1 db = new MyStroreEntities1();
 
-        // GET: Admin/Users
+        // ================== INDEX ==================
+        // Chỉ hiển thị tài khoản hệ thống (Admin) => UserRole = "A"
         public ActionResult Index()
         {
-            return View(db.User.ToList());
+            var admins = db.User
+                           .Where(u => u.UserRole == "A")
+                           .OrderBy(u => u.Username)
+                           .ToList();
+
+            return View(admins);
         }
 
-        // GET: Admin/Users/Details/5
+        // ================== DETAILS ==================
         public ActionResult Details(string id)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(id))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.User.Find(id);
+
+            var user = db.User.FirstOrDefault(u => u.Username == id);
             if (user == null)
             {
                 return HttpNotFound();
             }
+
+            // Lấy khách hàng liên kết nếu có
+            var customers = db.Customer
+                              .Where(c => c.Username == id)
+                              .Include(c => c.Order)
+                              .ToList();
+
+            ViewBag.Customers = customers;
+
             return View(user);
         }
 
-        // GET: Admin/Users/Create
+        // ================== CREATE (GET) ==================
         public ActionResult Create()
         {
+            // RoleList chỉ có Admin
+            ViewBag.RoleList = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Admin", Value = "A" }
+            };
             return View();
         }
 
-        // POST: Admin/Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        // ================== CREATE (POST) ==================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Username,Password,UserRole")] User user)
         {
             if (ModelState.IsValid)
             {
-                db.User.Add(user);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    // Luôn là admin
+                    user.UserRole = "A";
+
+                    db.User.Add(user);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (System.Data.Entity.Validation.DbEntityValidationException ex)
+                {
+                    var errorMessages = new List<string>();
+                    foreach (var entityErrors in ex.EntityValidationErrors)
+                    {
+                        foreach (var error in entityErrors.ValidationErrors)
+                        {
+                            errorMessages.Add($"Thuộc tính: {error.PropertyName} - Lỗi: {error.ErrorMessage}");
+                        }
+                    }
+
+                    ViewBag.ErrorDetails = string.Join("<br>", errorMessages);
+                }
             }
+
+            ViewBag.RoleList = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Admin", Value = "A" }
+            };
 
             return View(user);
         }
 
-        // GET: Admin/Users/Edit/5
+        // ================== EDIT (GET) ==================
         public ActionResult Edit(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.User.Find(id);
+
+            var user = db.User.Find(id);
             if (user == null)
             {
                 return HttpNotFound();
             }
+
+            ViewBag.RoleList = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Admin", Value = "A", Selected = true }
+            };
+
             return View(user);
         }
 
-        // POST: Admin/Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        // ================== EDIT (POST) ==================
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Username,Password,UserRole")] User user)
+        public ActionResult Edit(User updatedUser)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(user).State = EntityState.Modified;
+                var existingUser = db.User.Find(updatedUser.Username);
+                if (existingUser == null)
+                {
+                    return HttpNotFound();
+                }
+
+                existingUser.Password = updatedUser.Password;
+                existingUser.UserRole = "A"; // luôn admin
+
+                db.Entry(existingUser).State = EntityState.Modified;
                 db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
-            return View(user);
+
+            ViewBag.RoleList = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Admin", Value = "A", Selected = true }
+            };
+            return View(updatedUser);
         }
 
-        // GET: Admin/Users/Delete/5
+        // ================== DELETE (GET) ==================
         public ActionResult Delete(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.User.Find(id);
+
+            var user = db.User.Find(id);
             if (user == null)
             {
                 return HttpNotFound();
             }
+
             return View(user);
         }
 
-        // POST: Admin/Users/Delete/5
+        // ================== DELETE (POST) ==================
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            User user = db.User.Find(id);
+            var user = db.User.Find(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Xóa Customer + Order nếu có
+            var customers = db.Customer.Where(c => c.Username == id).ToList();
+
+            foreach (var customer in customers)
+            {
+                var orders = db.Order.Where(o => o.CustomerID == customer.CustomerID).ToList();
+                foreach (var order in orders)
+                {
+                    db.Order.Remove(order);
+                }
+
+                db.Customer.Remove(customer);
+            }
+
             db.User.Remove(user);
             db.SaveChanges();
+
             return RedirectToAction("Index");
         }
 

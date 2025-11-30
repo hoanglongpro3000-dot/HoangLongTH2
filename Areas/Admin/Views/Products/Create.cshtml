@@ -1,71 +1,521 @@
 ﻿@model HoangLongTH.Models.Product
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Tạo sản phẩm";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Create</h2>
+<style>
+    keyframes gradientShift {
+        0% {
+            background-position: 0% 50%;
+        }
 
+        50% {
+            background-position: 100% 50%;
+        }
 
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Product</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.CategoryID, "CategoryID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("CategoryID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.CategoryID, "", new { @class = "text-danger" })
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    keyframes float {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    keyframes shimmer {
+        0% {
+            background-position: -1000px 0;
+        }
+
+        100% {
+            background-position: 1000px 0;
+        }
+    }
+
+   keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.6;
+        }
+    }
+
+    .product-create-page {
+        background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #4facfe);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+        min-height: calc(100vh - 120px);
+        padding-top: 20px;
+        padding-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Animated overlay particles */
+    .product-create-page::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 20%, rgba(255,255,255,0.06) 0%, transparent 50%);
+        animation: float 8s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    .container-fluid {
+        position: relative;
+        z-index: 1;
+    }
+
+    .product-card,
+    .product-sidebar {
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 20px 60px rgba(0,0,0,.3);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .product-card:hover,
+    .product-sidebar:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 30px 80px rgba(0,0,0,.4);
+    }
+
+    .product-card .card-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        background-size: 200% 200%;
+        animation: gradientShift 8s ease infinite;
+        color: #fff;
+        border-bottom: none;
+        font-weight: 700;
+        letter-spacing: .5px;
+        border-radius: 20px 20px 0 0;
+        padding: 20px 25px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .product-card .card-header::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        animation: shimmer 3s infinite;
+    }
+
+    .badge-soft-info {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, rgba(79, 172, 254, 0.2), rgba(138, 43, 226, 0.2));
+        background-size: 200% 200%;
+        animation: gradientShift 6s ease infinite;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .badge-soft-info:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(79, 172, 254, 0.5);
+    }
+
+    .form-label-strong {
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #111827;
+        display: block;
+        transition: color 0.3s ease;
+    }
+
+    .form-control {
+        border-radius: 12px;
+        border: 2px solid #e5e7eb;
+        padding: 12px 16px;
+        font-size: 15px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: rgba(255,255,255,0.9);
+    }
+
+    .form-control:focus {
+        border-color: #764ba2;
+        box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.15);
+        transform: translateY(-2px);
+        background: #ffffff;
+    }
+
+    .form-group:hover .form-label-strong {
+        color: #764ba2;
+    }
+
+    .img-preview-box {
+        border-radius: 16px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 15px;
+        border: 2px solid rgba(255,255,255,0.5);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .img-preview-box::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+        animation: shimmer 4s infinite;
+    }
+
+    .img-preview-box img {
+        max-width: 100%;
+        max-height: 260px;
+        border-radius: 12px;
+        object-fit: contain;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        transition: transform 0.3s ease;
+    }
+
+    .img-preview-box:hover img {
+        transform: scale(1.05);
+    }
+
+    .img-preview-box small {
+        display: block;
+        margin-top: 10px;
+        color: #6b7280;
+        font-size: 12px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .btn-save-gradient {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        background-size: 200% 200%;
+        animation: gradientShift 4s ease infinite;
+        border: none;
+        color: #ffffff;
+        font-weight: 600;
+        padding: 12px 28px;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
+    }
+
+    .btn-save-gradient:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 25px rgba(118, 75, 162, 0.5);
+    }
+
+    .btn-save-gradient:active {
+        transform: translateY(-1px);
+    }
+
+    .btn-back {
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-weight: 600;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        background-size: 200% 200%;
+        animation: gradientShift 6s ease infinite;
+        border: none;
+        color: #fff !important;
+        box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
+        transition: all 0.3s ease;
+    }
+
+    .btn-back:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(118, 75, 162, 0.6);
+    }
+
+    .page-title {
+        background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+        background-size: 200% 200%;
+        animation: gradientShift 6s ease infinite;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 800;
+        text-shadow: 0 4px 10px rgba(118, 75, 162, 0.3);
+    }
+
+    .card-body {
+        padding: 25px;
+    }
+
+    .card-footer {
+        border-radius: 0 0 20px 20px;
+        background: rgba(249, 250, 251, 0.8);
+        backdrop-filter: blur(10px);
+        border-top: 1px solid rgba(229, 231, 235, 0.5);
+        padding: 20px 25px;
+    }
+
+    /* Animated list items */
+    .list-unstyled li {
+        padding: 8px 0;
+        transition: all 0.3s ease;
+        position: relative;
+        padding-left: 20px;
+    }
+
+    .list-unstyled li::before {
+        content: '✨';
+        position: absolute;
+        left: 0;
+        transition: transform 0.3s ease;
+    }
+
+    .list-unstyled li:hover {
+        padding-left: 25px;
+        color: #764ba2;
+    }
+
+    .list-unstyled li:hover::before {
+        transform: scale(1.3) rotate(20deg);
+    }
+
+    .text-muted {
+        color: #6b7280 !important;
+    }
+
+    small.text-muted {
+        display: block;
+        margin-top: 5px;
+    }
+
+    /* Breadcrumb styling */
+    .breadcrumb-text {
+        display: inline-block;
+        padding: 8px 16px;
+        background: rgba(255,255,255,0.25);
+        border-radius: 20px;
+        font-size: 13px;
+        backdrop-filter: blur(10px);
+        color: #fff;
+        margin-bottom: 15px;
+    }
+
+    .header-description {
+        background: rgba(255,255,255,0.2);
+        padding: 12px 18px;
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        color: #fff;
+        font-size: 14px;
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+</style>
+
+<div class="product-create-page">
+    <div class="container-fluid">
+
+        <!-- HEADER -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="breadcrumb-text">
+                    Trang quản trị / Sản phẩm / <strong>Tạo mới</strong>
+                </div>
+                <h3 class="mt-2 mb-3 page-title">
+                    <i class="fas fa-plus-circle"></i> Thêm Sản Phẩm Mới
+                </h3>
+                <p class="header-description">
+                    Tạo mới sản phẩm, chọn danh mục, nhập giá, mô tả và hình ảnh hiển thị trên trang khách hàng.
+                </p>
+            </div>
+            <div class="col-md-4 text-md-right mt-3 mt-md-0">
+                <span class="badge-soft-info">
+                    <i class="fas fa-boxes"></i> Quản lý kho sản phẩm
+                </span>
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
+        <div class="row">
+            <!-- FORM CHÍNH -->
+            <div class="col-lg-8 mb-4">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="card product-card">
+                        <div class="card-header">
+                            <strong>Thông Tin Sản Phẩm</strong>
+                        </div>
+
+                        <div class="card-body">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+
+                            <!-- Category -->
+                            <div class="form-group mb-4">
+                                <label class="form-label-strong">
+                                    Danh mục <span class="text-danger">*</span>
+                                </label>
+                                @Html.DropDownList("CategoryID", null, "-- Chọn danh mục --",
+                                    new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- Product Name -->
+                            <div class="form-group mb-4">
+                                <label class="form-label-strong">
+                                    Tên sản phẩm <span class="text-danger">*</span>
+                                </label>
+                                @Html.TextBoxFor(m => m.ProductName,
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        placeholder = "Nhập tên sản phẩm, ví dụ: iPhone 16 Pro Max 256GB..."
+                                    })
+                                @Html.ValidationMessageFor(m => m.ProductName, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- Description -->
+                            <div class="form-group mb-4">
+                                <label class="form-label-strong">
+                                    Mô tả
+                                </label>
+                                @Html.TextAreaFor(m => m.ProductDecription,
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        rows = 4,
+                                        placeholder = "Mô tả chi tiết sản phẩm: cấu hình, ưu đãi, bảo hành..."
+                                    })
+                                @Html.ValidationMessageFor(m => m.ProductDecription, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- Price -->
+                            <div class="form-group mb-4">
+                                <label class="form-label-strong">
+                                    Giá bán (VNĐ) <span class="text-danger">*</span>
+                                </label>
+                                @Html.TextBoxFor(m => m.ProductPrice,
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        type = "number",
+                                        min = "0",
+                                        step = "1000",
+                                        placeholder = "Nhập giá, ví dụ: 15990000"
+                                    })
+                                @Html.ValidationMessageFor(m => m.ProductPrice, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- QUANTITY -->
+                            <div class="form-group mb-4">
+                                <label class="form-label-strong">
+                                    Số lượng tồn kho <span class="text-danger">*</span>
+                                </label>
+                                @Html.TextBoxFor(m => m.Quantity,
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        type = "number",
+                                        min = "0",
+                                        step = "1",
+                                        placeholder = "Nhập số lượng ban đầu, ví dụ: 10"
+                                    })
+                                @Html.ValidationMessageFor(m => m.Quantity, "", new { @class = "text-danger" })
+                                <small class="text-muted">
+                                    Số lượng này sẽ được dùng để trừ dần khi khách đặt hàng.
+                                </small>
+                            </div>
+
+                            <!-- Image URL -->
+                            <div class="form-group mb-2">
+                                <label class="form-label-strong">
+                                    Đường dẫn hình ảnh (URL)
+                                </label>
+                                @Html.TextBoxFor(m => m.ProductImage,
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        placeholder = "Dán link hình ảnh, ví dụ: https://.../iphone16.jpg"
+                                    })
+                                @Html.ValidationMessageFor(m => m.ProductImage, "", new { @class = "text-danger" })
+                            </div>
+
+                            <small class="text-muted">
+                                Gợi ý: Có thể dùng ảnh từ thư mục <code>/Content/Images/</code>
+                                hoặc các dịch vụ lưu trữ ảnh như Imgur, Cloudinary...
+                            </small>
+                        </div>
+
+                        <div class="card-footer text-right">
+                            <button type="submit" class="btn-save-gradient">
+                                <i class="fas fa-save"></i> Lưu sản phẩm
+                            </button>
+                            <a href="@Url.Action("Index")" class="btn btn-secondary btn-back ml-2">
+                                <i class="fas fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- SIDEBAR: PREVIEW HÌNH + GỢI Ý -->
+            <div class="col-lg-4">
+                <div class="card product-sidebar mb-3">
+                    <div class="card-header bg-white border-0" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important; color: #1f2937 !important; border-radius: 20px 20px 0 0;">
+                        <strong><i class="fas fa-image"></i> Xem trước hình ảnh</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="img-preview-box">
+                            <img id="productPreview"
+                                 src="@(Model != null ? Model.ProductImage : "")"
+                                 alt="Product Image" />
+                            <small>
+                                Sau khi lưu, nếu đường dẫn ảnh hợp lệ, hình sẽ hiển thị tại đây khi bạn chỉnh sửa sản phẩm.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card product-sidebar">
+                    <div class="card-header bg-white border-0" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important; color: #1f2937 !important; border-radius: 20px 20px 0 0;">
+                        <strong><i class="fas fa-lightbulb"></i> Mẹo tạo sản phẩm đẹp</strong>
+                    </div>
+                    <div class="card-body pt-3">
+                        <ul class="list-unstyled mb-3">
+                            <li>Tên sản phẩm rõ ràng, có dung lượng & phân loại.</li>
+                            <li>Mô tả nên có điểm nổi bật + ưu đãi.</li>
+                            <li>Ảnh sắc nét, đúng tỉ lệ, không bị vỡ.</li>
+                        </ul>
+                        <p class="text-muted mb-0">
+                            Thông tin chính xác & đẹp sẽ giúp tăng tỉ lệ khách mua hàng trên website.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProductDecription, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ProductDecription, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ProductDecription, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProductPrice, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ProductPrice, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ProductPrice, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProductImage, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ProductImage, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ProductImage, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {

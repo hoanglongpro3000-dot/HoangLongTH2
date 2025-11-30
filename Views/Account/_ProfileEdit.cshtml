@@ -1,0 +1,61 @@
+﻿@model HoangLongTH.Models.AccountProfileViewModel
+
+<h4 style="font-weight:600; margin-bottom:16px;">Thay đổi thông tin</h4>
+
+@using (Html.BeginForm("Profile", "Account", FormMethod.Post, new { @class = "profile-form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.CustomerID)
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(m => m.EditCustomerName)
+        @Html.TextBoxFor(m => m.EditCustomerName, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.EditCustomerName, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(m => m.EditCustomerPhone)
+        @Html.TextBoxFor(m => m.EditCustomerPhone, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.EditCustomerPhone, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(m => m.EditCustomerEmail)
+        @Html.TextBoxFor(m => m.EditCustomerEmail, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.EditCustomerEmail, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(m => m.EditCustomerAddress)
+        @Html.TextBoxFor(m => m.EditCustomerAddress, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.EditCustomerAddress, "", new { @class = "text-danger" })
+    </div>
+
+    <hr />
+
+    <h5 style="font-size:14px; font-weight:600; margin-bottom:10px;">Đổi mật khẩu</h5>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(m => m.CurrentPassword)
+        @Html.PasswordFor(m => m.CurrentPassword, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.CurrentPassword, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(m => m.NewPassword)
+        @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.NewPassword, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(m => m.ConfirmNewPassword)
+        @Html.PasswordFor(m => m.ConfirmNewPassword, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.ConfirmNewPassword, "", new { @class = "text-danger" })
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">
+        Lưu thay đổi
+    </button>
+}
+

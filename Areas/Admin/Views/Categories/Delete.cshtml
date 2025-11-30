@@ -1,33 +1,185 @@
 ﻿@model HoangLongTH.Models.Category
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Xóa danh mục";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Delete</h2>
-
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Category</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.CategoryName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CategoryName)
-        </dd>
-
-    </dl>
-
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+<style>
+    .delete-page {
+        background: #f5f7fb;
+        min-height: calc(100vh - 120px);
+        padding: 20px 0 40px 0;
     }
+
+    .delete-wrapper {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .delete-title {
+        font-size: 26px;
+        font-weight: 700;
+        color: #2d3748;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+
+        .delete-title i {
+            color: #e11d48;
+        }
+
+    .delete-card {
+        border-radius: 18px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        background: #ffffff;
+    }
+
+    .delete-card-header {
+        background: linear-gradient(135deg, #f97316, #ea580c, #e11d48);
+        color: #fff;
+        padding: 16px 24px;
+    }
+
+        .delete-card-header h5 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+    .delete-card-body {
+        padding: 24px;
+    }
+
+    .delete-warning {
+        background: #fff1f2;
+        border: 1px solid #fecaca;
+        border-radius: 10px;
+        padding: 14px 16px;
+        margin-bottom: 20px;
+        color: #b91c1c;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        font-size: 14px;
+    }
+
+        .delete-warning i {
+            margin-top: 3px;
+            font-size: 18px;
+        }
+
+    .delete-field-label {
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 4px;
+    }
+
+    .delete-field-value {
+        font-size: 15px;
+        color: #6b7280;
+        padding: 10px 12px;
+        background: #f9fafb;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+    }
+
+    .delete-actions {
+        margin-top: 25px;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+    }
+
+    .btn-delete-confirm {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        border: none;
+        color: #fff;
+        font-weight: 600;
+        padding: 9px 20px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .btn-delete-confirm:hover {
+            opacity: 0.9;
+        }
+
+    .btn-back {
+        border-radius: 999px;
+        padding: 9px 18px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .btn-back i {
+            font-size: 13px;
+        }
+</style>
+
+<div class="delete-page">
+    <div class="container-fluid delete-wrapper">
+
+        <!-- TIÊU ĐỀ -->
+        <div class="delete-title">
+            <i class="fas fa-trash-alt"></i>
+            <span>Xóa danh mục</span>
+        </div>
+
+        <!-- CARD XÁC NHẬN -->
+        <div class="card delete-card">
+            <div class="delete-card-header">
+                <h5><i class="fas fa-exclamation-circle"></i> Xác nhận xóa danh mục</h5>
+            </div>
+
+            <div class="delete-card-body">
+
+                <!-- CẢNH BÁO -->
+                <div class="delete-warning">
+                    <i class="fas fa-triangle-exclamation"></i>
+                    <div>
+                        <strong>Bạn có chắc chắn muốn xóa danh mục này?</strong><br />
+                        <span>Thao tác này <u>không thể hoàn tác</u>. Hãy kiểm tra kỹ trước khi xóa.</span>
+                    </div>
+                </div>
+
+                <!-- THÔNG TIN DANH MỤC -->
+                <div class="mb-2">
+                    <div class="delete-field-label">Tên danh mục</div>
+                    <div class="delete-field-value">
+                        @Html.DisplayFor(m => m.CategoryName)
+                    </div>
+                </div>
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="delete-actions">
+                        <button type="submit" class="btn btn-delete-confirm">
+                            <i class="fas fa-trash"></i> Xóa danh mục
+                        </button>
+
+                        <a href="@Url.Action("Index")" class="btn btn-light btn-back">
+                            <i class="fas fa-arrow-left"></i> Quay lại danh sách
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
 </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

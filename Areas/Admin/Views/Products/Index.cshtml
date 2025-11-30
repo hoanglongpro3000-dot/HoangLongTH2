@@ -6,140 +6,385 @@
 }
 
 <style>
+    .page-wrapper {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 30px 0;
+    }
+
     .page-header {
+        background: white;
+        padding: 25px 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        margin-bottom: 30px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 25px;
-        border-bottom: 3px solid #007bff;
-        padding-bottom: 10px;
     }
 
         .page-header h2 {
             font-weight: 700;
-            color: #0056b3;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            font-size: 28px;
         }
 
-    .table thead {
-        background: linear-gradient(90deg, #007bff, #00aaff);
-        color: #fff;
-        font-weight: 600;
+            .page-header h2 i {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+    .search-card {
+        background: white;
+        padding: 25px 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        margin-bottom: 25px;
     }
 
-    .table tbody tr:hover {
-        background-color: #f2f8ff;
-        transition: all 0.2s ease;
+        .search-card label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+    .form-control {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 12px 18px;
+        transition: all 0.3s ease;
+        font-size: 15px;
     }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
 
     .btn {
-        border-radius: 8px;
-        padding: 6px 12px;
-        font-weight: 500;
+        border-radius: 10px;
+        padding: 12px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 
-        .btn i {
-            margin-right: 4px;
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
 
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .btn-warning {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+    }
+
+    .btn-secondary {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+    }
+
+    .btn i {
+        margin-right: 6px;
+    }
+
+    /* ===== TABLE + SCROLL NGANG ===== */
+    .table-container {
+        background: white;
+        padding: 0;
+        border-radius: 15px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        overflow-x: auto; /* cho phép kéo ngang */
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table {
+        margin: 0;
+        min-width: 1100px; /* để có không gian xuất hiện scroll ngang */
+    }
+
+        .table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+            .table thead th {
+                font-weight: 600;
+                padding: 18px 15px;
+                border: none;
+                font-size: 14px;
+                letter-spacing: 0.5px;
+            }
+
+        .table tbody td {
+            padding: 20px 15px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+            .table tbody tr:hover {
+                background: linear-gradient(90deg, #f8f9ff 0%, #f0f2ff 100%);
+                transform: scale(1.01);
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+            }
+
     .product-img {
-        width: 80px;
-        height: 80px;
+        width: 70px;
+        height: 70px;
         object-fit: cover;
-        border-radius: 10px;
-        border: 2px solid #e0e0e0;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s ease;
+        border-radius: 12px;
+        border: 3px solid #f0f0f0;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
     }
 
         .product-img:hover {
-            transform: scale(1.1);
+            transform: scale(1.15) rotate(3deg);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border-color: #667eea;
         }
 
-    .table-container {
-        background: #ffffff;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    .product-name {
+        font-weight: 600;
+        color: #333;
+        font-size: 15px;
+        word-break: break-word;
+    }
+
+    .product-price {
+        font-weight: 700;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 16px;
+    }
+
+    .badge-category {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 13px;
+        display: inline-block;
+    }
+
+    .btn-sm {
+        padding: 8px 16px;
+        font-size: 13px;
+        border-radius: 8px;
+    }
+
+    .btn-warning.btn-sm {
+        background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+    }
+
+    .btn-info.btn-sm {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .btn-danger.btn-sm {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .empty-state {
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+        .empty-state i {
+            font-size: 80px;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        .empty-state p {
+            color: #999;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+    .search-input-wrapper {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+        .search-input-wrapper .form-control {
+            flex: 1;
+            min-width: 250px;
+        }
+
+    /* ======= CỘT TỒN KHO ======= */
+    .stock-pill {
+        display: inline-block;
+        min-width: 80px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    .stock-ok {
+        background: rgba(34, 197, 94, .15);
+        color: #166534;
+    }
+
+    .stock-low {
+        background: rgba(234, 179, 8, .18);
+        color: #854d0e;
+    }
+
+    .stock-out {
+        background: rgba(239, 68, 68, .15);
+        color: #b91c1c;
     }
 </style>
-<!-- Đoạn thêm -->
-@using (Html.BeginForm("Index", "Products", FormMethod.Get, new { area = "Admin" }))
-{
-    <div class="mb-3">
-        Tên sản phẩm:
-        <input type="text"
-               name="SearchString"
-               value="@ViewBag.SearchString"
-               placeholder="Nhập tên sản phẩm..."
-               class="form-control d-inline-block"
-               style="width:260px; display:inline-block;" />
-        <input type="submit" value="Tìm kiếm" class="btn btn-warning" />
-        <a href="@Url.Action("Index", "Products", new { area = "Admin" })" class="btn btn-secondary">
-            Reset
-        </a>
-    </div>
-}
 
+<div class="page-wrapper">
+    <div class="container">
+        <!-- Header -->
+        <div class="page-header">
+            <h2><i class="bi bi-box-seam"></i> Danh sách sản phẩm</h2>
+            @Html.ActionLink("➕ Thêm sản phẩm mới", "Create", null, new { @class = "btn btn-primary" })
+        </div>
 
-<!--Kết thúc -->
-
-<div class="container mt-4 table-container">
-    <div class="page-header">
-        <h2><i class="bi bi-box-seam"></i> Danh sách sản phẩm</h2>
-        @Html.ActionLink("➕ Thêm sản phẩm mới", "Create", null, new { @class = "btn btn-primary shadow-sm" })
-    </div>
-
-    <table class="table table-bordered table-hover align-middle">
-        <thead class="text-center">
-            <tr>
-                <th style="width:180px;">Tên sản phẩm</th>
-                <th>Mô tả</th>
-                <th style="width:120px;">Giá</th>
-                <th style="width:100px;">Hình ảnh</th>
-                <th style="width:140px;">Danh mục</th>
-                <th style="width:180px;">Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (!Model.Any())
+        <!-- Search Box -->
+        <div class="search-card">
+            @using (Html.BeginForm("Index", "Products", FormMethod.Get, new { area = "Admin" }))
             {
-                <tr>
-                    <td colspan="6" class="text-center text-muted">
-                        Không tìm thấy sản phẩm nào phù hợp với từ khóa "@ViewBag.SearchString".
-                    </td>
-                </tr>
+                <label><i class="bi bi-search"></i> Tìm kiếm sản phẩm</label>
+                <div class="search-input-wrapper">
+                    <input type="text"
+                           name="SearchString"
+                           value="@ViewBag.SearchString"
+                           placeholder="Nhập tên sản phẩm để tìm kiếm..."
+                           class="form-control" />
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-search"></i> Tìm kiếm
+                    </button>
+                    <a href="@Url.Action("Index", "Products", new { area = "Admin" })" class="btn btn-secondary">
+                        <i class="bi bi-arrow-clockwise"></i> Reset
+                    </a>
+                </div>
             }
-            else
-            {
-                foreach (var item in Model)
-                {
-                    <tr class="text-center">
-                        <td class="fw-semibold text-start">@item.ProductName</td>
-                        <td class="text-muted text-start">@item.ProductDecription</td>
-                        <td class="fw-bold text-primary">@String.Format("{0:N0} ₫", item.ProductPrice)</td>
-                        <td>
-                            @if (!string.IsNullOrEmpty(item.ProductImage))
-                            {
-                                <img src="@Url.Content(item.ProductImage)" alt="Image" class="product-img" />
-                            }
-                            else
-                            {
-                                <span class="text-muted fst-italic">Không có ảnh</span>
-                            }
-                        </td>
-                        <td>@(item.Category != null ? item.Category.CategoryName : "Chưa có")</td>
-                        <td>
-                            @Html.ActionLink(" Sửa", "Edit", new { id = item.ProductID }, new { @class = "btn btn-sm btn-warning me-1 bi bi-pencil-square" })
-                            @Html.ActionLink(" Xem", "Details", new { id = item.ProductID }, new { @class = "btn btn-sm btn-info text-white me-1 bi bi-eye" })
-                            @Html.ActionLink(" Xóa", "Delete", new { id = item.ProductID }, new
-                            {
-                                @class = "btn btn-sm btn-danger bi bi-trash",
-                                onclick = "return confirm('Bạn có chắc muốn xóa sản phẩm này không?');"
-                            })
-                        </td>
+        </div>
+
+        <!-- Table -->
+        <div class="table-container">
+            <table class="table table-hover align-middle">
+                <thead class="text-center">
+                    <tr>
+                        <th style="width:200px;">Tên sản phẩm</th>
+                        <th style="width:280px;">Mô tả</th>
+                        <th style="width:140px;">Giá</th>
+                        <th style="width:110px;">Số lượng</th> @* cột mới *@
+                        <th style="width:100px;">Hình ảnh</th>
+                        <th style="width:150px;">Danh mục</th>
+                        <th style="width:220px;">Hành động</th>
                     </tr>
-                }
-            }
-        </tbody>
-    </table>
-</div></table>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">
+                                    <i class="bi bi-inbox"></i>
+                                    <p>Không tìm thấy sản phẩm nào phù hợp với từ khóa "<strong>@ViewBag.SearchString</strong>"</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr class="text-center">
+                                <td class="text-start">
+                                    <span class="product-name">@item.ProductName</span>
+                                </td>
+                                <td class="text-muted text-start" style="font-size: 14px;">
+                                    @item.ProductDecription
+                                </td>
+                                <td>
+                                    <span class="product-price">@String.Format("{0:N0} ₫", item.ProductPrice)</span>
+                                </td>
+
+                                <!-- SỐ LƯỢNG -->
+                                <td>
+                                    @{
+                                        string stockClass;
+                                        string stockText;
+
+                                        if (item.Quantity <= 0)
+                                        {
+                                            stockClass = "stock-out";
+                                            stockText = "Hết hàng";
+                                        }
+                                        else if (item.Quantity <= 5)
+                                        {
+                                            stockClass = "stock-low";
+                                            stockText = "Còn " + item.Quantity;
+                                        }
+                                        else
+                                        {
+                                            stockClass = "stock-ok";
+                                            stockText = "Còn " + item.Quantity;
+                                        }
+                                    }
+                                    <span class="stock-pill @stockClass">@stockText</span>
+                                </td>
+
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.ProductImage))
+                                    {
+                                        <img src="@Url.Content(item.ProductImage)" alt="@item.ProductName" class="product-img" />
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted fst-italic" style="font-size: 13px;">
+                                            <i class="bi bi-image"></i> Không có ảnh
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="badge-category">
+                                        @(item.Category != null ? item.Category.CategoryName : "Chưa có")
+                                    </span>
+                                </td>
+                                <td>
+                                    <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;">
+                                        @Html.ActionLink("Sửa", "Edit", new { id = item.ProductID }, new { @class = "btn btn-sm btn-warning text-white" })
+                                        @Html.ActionLink("Xem", "Details", new { id = item.ProductID }, new { @class = "btn btn-sm btn-info text-white" })
+                                        @Html.ActionLink("Xóa", "Delete", new { id = item.ProductID }, new
+                                        {
+                                            @class = "btn btn-sm btn-danger text-white",
+                                            onclick = "return confirm('Bạn có chắc muốn xóa sản phẩm này không?');"
+                                        })
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

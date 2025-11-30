@@ -1,0 +1,103 @@
+﻿.login-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #111827; /* gần giống Facebook */
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+    .login-container .form-control {
+        width: 100%;
+        max-width: 450px; /* hoặc 100% nếu muốn chiếm toàn bộ */
+        border-radius: 6px;
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        transition: border-color 0.3s;
+    }
+
+    .login-container label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .login-container .form-control:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    }
+
+    .login-container button {
+        width: 100%;
+        padding: 12px;
+        border-radius: 6px;
+        font-weight: bold;
+        background-color: #007bff;
+        border: none;
+        color: white;
+        font-size: 1rem;
+        transition: background-color 0.3s;
+    }
+
+        .login-container button:hover {
+            background-color: #0056b3;
+        }
+
+.register-link {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+    .register-link a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+/* ✅ Responsive design */
+@media (max-width: 768px) {
+    .login-container {
+        padding: 20px;
+        margin: 30px 20px;
+        max-width: 90%;
+    }
+
+        .login-container .form-control {
+            font-size: 0.95rem;
+        }
+
+        .login-container button {
+            font-size: 0.95rem;
+            padding: 10px;
+        }
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 16px;
+        margin: 20px 12px;
+    }
+
+        .login-container h2 {
+            font-size: 1.4rem;
+            text-align: center;
+        }
+
+    .register-link {
+        font-size: 0.9rem;
+    }
+}

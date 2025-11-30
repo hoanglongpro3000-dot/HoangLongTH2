@@ -1,73 +1,313 @@
 ﻿@model HoangLongTH.Models.Product
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Chỉnh sửa sản phẩm";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Edit</h2>
+<style>
+    .product-edit-page {
+        background: #eef1f7;
+        min-height: calc(100vh - 120px);
+        padding-top: 25px;
+        padding-bottom: 40px;
+    }
 
+    .product-card,
+    .product-sidebar {
+        border-radius: 18px;
+        border: none;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.10);
+    }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Product</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.ProductID)
+    .product-card {
+        background: #ffffff;
+    }
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.CategoryID, "CategoryID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("CategoryID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.CategoryID, "", new { @class = "text-danger" })
+        .product-card .card-header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed, #db2777);
+            color: #fff;
+            padding: 16px 20px;
+            font-weight: 700;
+            letter-spacing: .3px;
+        }
+
+    .badge-soft-warning {
+        display: inline-block;
+        padding: 7px 16px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #f97316, #ea580c);
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(234,88,12,.35);
+    }
+
+    .form-label-strong {
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #111827;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        padding: 10px 14px;
+        font-size: 15px;
+        transition: .25s;
+    }
+
+        .form-control:focus {
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124,58,237,.25);
+        }
+
+    .img-preview-box {
+        border-radius: 14px;
+        background: #fff;
+        padding: 12px;
+        border: 1px solid #e2e8f0;
+        text-align: center;
+    }
+
+        .img-preview-box img {
+            max-width: 100%;
+            max-height: 260px;
+            border-radius: 10px;
+            object-fit: contain;
+        }
+
+        .img-preview-box small {
+            display: block;
+            margin-top: 6px;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+    .product-sidebar .card-header {
+        background: linear-gradient(135deg, #0ea5e9, #6366f1);
+        color: #fff;
+        font-weight: 700;
+        padding: 13px 18px;
+    }
+
+    .product-sidebar .card-body {
+        background: #ffffff;
+    }
+
+    .btn-gradient-save {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        border: none;
+        color: #ffffff;
+        font-weight: 600;
+        padding: 9px 22px;
+        border-radius: 12px;
+        transition: .25s;
+    }
+
+        .btn-gradient-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(34,197,94,.35);
+        }
+
+    .btn-back {
+        padding: 9px 18px;
+        border-radius: 12px;
+        font-weight: 500;
+    }
+</style>
+
+<div class="product-edit-page">
+    <div class="container-fluid">
+
+        <!-- HEADER -->
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <small class="text-muted">
+                    Trang quản trị / Sản phẩm / <strong>Chỉnh sửa</strong>
+                </small>
+                <h3 class="mt-2 mb-1"
+                    style="background: linear-gradient(135deg,#4f46e5,#7c3aed,#db2777);
+                           -webkit-background-clip:text;
+                           -webkit-text-fill-color:transparent;
+                           font-weight:800;">
+                    <i class="fas fa-edit"></i> Chỉnh Sửa Sản Phẩm
+                </h3>
+                <p class="text-muted mb-0">
+                    Cập nhật thông tin sản phẩm, thay đổi giá, mô tả, danh mục và số lượng tồn kho.
+                </p>
+            </div>
+            <div class="col-md-4 text-md-right mt-3 mt-md-0">
+                <span class="badge-soft-warning">
+                    <i class="fas fa-box-open"></i> Đang chỉnh sửa sản phẩm #@Model.ProductID
+                </span>
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
+        <div class="row">
+            <!-- FORM CHÍNH -->
+            <div class="col-lg-8 mb-4">
+                @using (Html.BeginForm("Edit", "Products", FormMethod.Post, new { area = "Admin" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.ProductID)
+
+                    <div class="card product-card">
+                        <div class="card-header">
+                            <strong>Thông Tin Sản Phẩm</strong>
+                        </div>
+
+                        <div class="card-body">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+
+                            <!-- Category -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">
+                                    Danh mục <span class="text-danger">*</span>
+                                </label>
+                                @Html.DropDownListFor(m => m.CategoryID,
+                                    (SelectList)ViewBag.CategoryID,
+                                    "-- Chọn danh mục --",
+                                    new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- Product Name -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">
+                                    Tên sản phẩm <span class="text-danger">*</span>
+                                </label>
+                                @Html.TextBoxFor(m => m.ProductName,
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        placeholder = "Nhập tên sản phẩm..."
+                                    })
+                                @Html.ValidationMessageFor(m => m.ProductName, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- Description -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">
+                                    Mô tả
+                                </label>
+                                @Html.TextAreaFor(m => m.ProductDecription,
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        rows = 4,
+                                        placeholder = "Mô tả ngắn gọn về sản phẩm, tính năng, khuyến mãi..."
+                                    })
+                                @Html.ValidationMessageFor(m => m.ProductDecription, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- Price -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">
+                                    Giá bán (VNĐ) <span class="text-danger">*</span>
+                                </label>
+                                @* DÙNG FORMAT 0 ĐỂ KHÔNG CÓ DẤU CHẤM / PHẨY *@
+                                @Html.TextBoxFor(m => m.ProductPrice,
+                                    "{0:0}",  /* luôn là 100000, 89000000,... */
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        type = "number",
+                                        min = "0",
+                                        step = "1000",
+                                        placeholder = "Nhập giá, ví dụ: 15000000"
+                                    })
+                                @Html.ValidationMessageFor(m => m.ProductPrice, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- QUANTITY -->
+                            <div class="form-group mb-3">
+                                <label class="form-label-strong">
+                                    Số lượng tồn kho <span class="text-danger">*</span>
+                                </label>
+                                @Html.TextBoxFor(m => m.Quantity,
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        type = "number",
+                                        min = "0",
+                                        step = "1",
+                                        placeholder = "Nhập số lượng hiện có, ví dụ: 10"
+                                    })
+                                @Html.ValidationMessageFor(m => m.Quantity, "", new { @class = "text-danger" })
+                                <small class="text-muted">
+                                    Khi có đơn hàng, hệ thống có thể trừ dần số lượng này (nếu bạn triển khai logic trừ kho).
+                                </small>
+                            </div>
+
+                            <!-- Image URL -->
+                            <div class="form-group mb-1">
+                                <label class="form-label-strong">
+                                    Đường dẫn hình ảnh (URL)
+                                </label>
+                                @Html.TextBoxFor(m => m.ProductImage,
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        placeholder = "Dán link hình ảnh sản phẩm..."
+                                    })
+                                @Html.ValidationMessageFor(m => m.ProductImage, "", new { @class = "text-danger" })
+                            </div>
+
+                            <small class="text-muted">
+                                Gợi ý: Có thể dùng link ảnh từ Cloudinary, Imgur,
+                                hoặc thư mục <code>/Content/Images/...</code> trong project.
+                            </small>
+                        </div>
+
+                        <div class="card-footer text-right">
+                            <button type="submit" class="btn-gradient-save">
+                                <i class="fas fa-save"></i> Lưu thay đổi
+                            </button>
+                            <a href="@Url.Action("Index", "Products", new { area = "Admin" })"
+                               class="btn btn-secondary btn-back ml-2">
+                                <i class="fas fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- SIDEBAR: PREVIEW HÌNH + GỢI Ý -->
+            <div class="col-lg-4">
+                <div class="card product-sidebar mb-3">
+                    <div class="card-header">
+                        <strong><i class="fas fa-image"></i> Xem trước hình ảnh</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="img-preview-box">
+                            <img id="productPreview" src="@Model.ProductImage" alt="Product Image" />
+                            <small>
+                                Nếu bạn đổi đường dẫn ảnh và lưu lại, lần sau vào đây sẽ hiển thị ảnh mới.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card product-sidebar">
+                    <div class="card-header">
+                        <strong><i class="fas fa-lightbulb"></i> Gợi ý</strong>
+                    </div>
+                    <div class="card-body pt-3">
+                        <ul class="list-unstyled mb-2">
+                            <li>• Đặt tên sản phẩm rõ ràng: “iPhone 16 Pro Max 256GB VN/A”.</li>
+                            <li>• Mô tả nên có: cấu hình, ưu đãi, bảo hành.</li>
+                            <li>• Giá nên theo cùng đơn vị VNĐ, không dùng dấu phẩy ngăn cách.</li>
+                        </ul>
+                        <p class="text-muted mb-0">
+                            Thông tin chính xác giúp khách hàng dễ quyết định hơn và giảm rủi ro nhầm lẫn khi đặt hàng.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProductDecription, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ProductDecription, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ProductDecription, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProductPrice, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ProductPrice, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ProductPrice, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProductImage, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ProductImage, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ProductImage, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {

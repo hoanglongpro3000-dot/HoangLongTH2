@@ -1,0 +1,26 @@
+﻿@model HoangLongTH.Models.AccountProfileViewModel
+
+<h4 style="font-weight:600; margin-bottom:16px;">Thông tin cá nhân</h4>
+
+<table class="table table-borderless mb-0">
+    <tr>
+        <th style="width:140px;">Tên đăng nhập</th>
+        <td>@Model.Username</td>
+    </tr>
+    <tr>
+        <th>Họ tên</th>
+        <td>@Model.CustomerName</td>
+    </tr>
+    <tr>
+        <th>Số điện thoại</th>
+        <td>@Model.CustomerPhone</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td>@Model.CustomerEmail</td>
+    </tr>
+    <tr>
+        <th>Địa chỉ</th>
+        <td>@Model.CustomerAddress</td>
+    </tr>
+</table>

@@ -1,0 +1,155 @@
+﻿
+.register-wrapper {
+    display: block;
+    padding: 0 20px 20px; /* top = 0, bottom = 20 */
+    box-sizing: border-box;
+}
+
+
+/* căn giữa card theo chiều ngang */
+.register-container {
+    margin: 0 auto;
+}
+
+/* Form container */
+.register-container {
+    width: 100%;
+    max-width: 400px; /* giống login-container */
+    margin: 50px auto; /* giống login-container: cách header 50px */
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+    .register-container .form-control {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 6px;
+        padding: 12px 14px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+    }
+
+    /* Tiêu đề */
+    .register-container h2 {
+        text-align: center;
+        margin-bottom: 24px;
+        font-size: 1.6rem;
+    }
+
+    /* Label và input */
+    .register-container label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .register-container .form-control {
+        width: 100%;
+        border-radius: 6px;
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+    }
+
+        .register-container .form-control:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+        }
+
+    /* Thông báo lỗi */
+    .register-container .text-danger {
+        color: #dc3545;
+        font-size: 0.9rem;
+        margin-top: 4px;
+    }
+
+    /* Nút đăng ký */
+    .register-container button {
+        width: 100%;
+        padding: 12px;
+        border-radius: 6px;
+        font-weight: bold;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        font-size: 1rem;
+        transition: background-color 0.3s;
+    }
+
+        .register-container button:hover {
+            background-color: #0056b3;
+        }
+/* Đoạn "Bạn đã có tài khoản? Đăng nhập" ở dưới form */
+.register-login-hint {
+    margin-top: 16px;
+    font-size: 14px;
+    color: #555555;
+}
+
+    .register-login-hint span {
+        margin-right: 4px;
+    }
+
+/* Đoạn "Bạn đã có tài khoản? Đăng nhập" ở dưới form */
+.register-login-hint {
+    margin-top: 16px;
+    font-size: 14px;
+    color: #555555;
+}
+
+    .register-login-hint span {
+        margin-right: 4px;
+    }
+
+/* Link / nút Đăng nhập – màu xanh */
+.register-login-link {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #0d6efd; /* xanh chữ */
+    text-decoration: none;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+    .register-login-link:hover {
+        color: #ffffff; /* chữ trắng khi hover */
+        background: #0d6efd; /* nền xanh khi hover */
+        border-color: #0d6efd;
+        transform: translateY(-1px);
+    }
+
+
+
+/* Responsive cho thiết bị nhỏ */
+@media (max-width: 768px) {
+    .register-container {
+        padding: 20px;
+        margin: 20px;
+    }
+
+        .register-container h2 {
+            font-size: 1.4rem;
+        }
+}
+
+@media (max-width: 480px) {
+    .register-container {
+        padding: 16px;
+        margin: 16px 8px;
+    }
+
+        .register-container h2 {
+            font-size: 1.3rem;
+        }
+}

@@ -13,10 +13,10 @@ namespace HoangLongTH.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class MyStroreEntities : DbContext
+    public partial class MyStroreEntities1 : DbContext
     {
-        public MyStroreEntities()
-            : base("name=MyStroreEntities")
+        public MyStroreEntities1()
+            : base("name=MyStroreEntities1")
         {
         }
     

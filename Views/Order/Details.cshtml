@@ -397,9 +397,9 @@
                 tong += line;
 
                 <div class="item-row">
-                    <img class="thumb" src="@(d.Product?.ProductImage ?? Url.Content("~/Content/img/no-image.png"))" alt="@d.Product?.ProductName" />
+                    <img class="thumb" src="@(d.Product.ProductImage ?? Url.Content("~/Content/img/no-image.png"))" alt="@d.Product?.ProductName" />
                     <div>
-                        <div class="product-name">@d.Product?.ProductName</div>
+                        <div class="product-name">@d.Product.ProductName</div>
                         <span class="product-id">Mã: @d.ProductID</span>
                     </div>
                     <div class="text-end price-col">@unit.ToString("n0") đ</div>

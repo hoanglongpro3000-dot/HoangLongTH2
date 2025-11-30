@@ -27,6 +27,7 @@ namespace HoangLongTH.Models
         public string ProductDecription { get; set; }
         public decimal ProductPrice { get; set; }
         public string ProductImage { get; set; }
+        public Nullable<int> Quantity { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CartItem> CartItem { get; set; }
