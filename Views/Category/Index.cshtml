@@ -175,7 +175,7 @@
                             @String.Format("{0:N0} ₫", p.ProductPrice)
                         </div>
                         <div class="product-actions">
-                            <button class="btn-small btn-buy" onclick="addToCart(@p.ProductID)">Mua ngay</button>
+                            <button class="btn-small btn-buy" onclick="addToCart(@p.ProductID)">Thêm vào giỏ</button>
                             <a class="btn-small btn-detail"
                                href="@Url.Action("Details", "Product", new { id = p.ProductID })">
                                 Chi tiết

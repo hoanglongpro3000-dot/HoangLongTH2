@@ -408,7 +408,7 @@
                     <h4>🚚 Thông tin giao hàng</h4>
 
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    @using (Html.BeginForm("Checkout", "Order", FormMethod.Post))
+                    @using (Html.BeginForm("Checkout", "Order", FormMethod.Post)) //địa chỉ giao hàng//
                     {
                         @Html.AntiForgeryToken()
                         <div class="mb-3">

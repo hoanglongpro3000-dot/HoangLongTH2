@@ -507,7 +507,7 @@
                         <i class="fas fa-clipboard-list"></i> Đơn hàng
                         <i class="fas fa-chevron-down dropdown-icon"></i>
                     </a>
-                    <div class="dropdown-menu">
+                    @*<div class="dropdown-menu">
                         <a href="@Url.Action("MyOrders", "Order", new { status = "pending" })">
                             <i class="fas fa-clock"></i> Chờ xác nhận
                         </a>
@@ -523,7 +523,7 @@
                         <a href="@Url.Action("MyOrders", "Order", new { status = "cancelled" })">
                             <i class="fas fa-times-circle"></i> Đã hủy
                         </a>
-                    </div>
+                    </div>*@
                 </div>
 
                 <!-- Tài khoản -->
@@ -534,13 +534,13 @@
                         <i class="fas fa-user"></i> Tài khoản
                         <i class="fas fa-chevron-down dropdown-icon"></i>
                     </a>
-                    <div class="dropdown-menu">
+                   @*<div class="dropdown-menu">
                         @if (Session["Username"] != null)
                         {
                             <a href="@Url.Action("Profile", "Account")" class="account-main-link">
                                 <i class="fas fa-user-circle"></i> Thông tin tài khoản
                             </a>
-                            <a href="@Url.Action("ChangePassword", "Account")">
+                            <a href= "@Url.Action("ChangePassword", "Account")">
                                 <i class="fas fa-key"></i> Đổi mật khẩu
                             </a>
                             <a href="@Url.Action("Address", "Customer")">
@@ -562,7 +562,7 @@
                                 <i class="fas fa-user-plus"></i> Đăng ký
                             </a>
                         }
-                    </div>
+                    </div>*@
                 </div>
             </div>
         </div>
